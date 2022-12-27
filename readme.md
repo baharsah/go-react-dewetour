@@ -8,3 +8,6 @@ running archipelago is an golang server with gorilla mux and gorm with clean arc
 ## Initialization 
 
 1. run `docker-compose up`
+
+## tree
+

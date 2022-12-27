@@ -5,11 +5,20 @@ import {Button , Container} from 'react-bootstrap';
 import anime from "animejs/lib/anime.es.js";
 
 
-import React , { useEffect} from 'react'
+import React , { useEffect , useState} from 'react'
+
+
+
 
 function SearchableContainer() {
 
 
+  const [ searchStatus , changesearchStatus ] = useState(false)
+
+
+
+
+  // creatinng clickable popup
   useEffect(() => {
 
     var textWrapper = document.querySelector('.ml13');
@@ -37,6 +46,24 @@ function SearchableContainer() {
    } , [])
 
 
+   var  searchToggle = ()=> { 
+
+
+    if( !searchStatus ){
+
+      changesearchStatus(true)
+
+
+    }else{
+
+      changesearchStatus(false)
+
+    }
+
+
+    }
+
+
 
 
 
@@ -51,11 +78,17 @@ function SearchableContainer() {
 
   <Form.Label className="fs-4" style={{color : "white"}}  htmlFor="basic-url">Search your pace</Form.Label>
   <InputGroup className="mb-3">
-    <Form.Control className='fs-3 fw-bold' id="basic-url" aria-describedby="basic-addon3" />
+    <Form.Control className='fs-3 fw-bold' onFocus={searchToggle} onBlur={searchToggle} id="basic-url" aria-describedby="basic-addon3" />
     <Button variant="warning" className='fw-bold fs-3' style={{ color : "white" , padding : "20px"}} id="button-addon2">
       Search
     </Button>
   </InputGroup>
+  {searchStatus && 
+  <Container className="rounded p-3 search-target" style={ {backgroundColor : "white" , opacity : 1 , position : "absolute" , zIndex : 300} }>
+    <h1 className="text-center">  Hallo </h1>
+  </Container>
+}
+
 
 </div>
   </div>
