@@ -1,0 +1,100 @@
+{
+  "users": [
+    {
+      "name": "Arisu Lutfikahana Baharsah",
+      "email": "l2phika.flower@baharsah.my.id",
+      "password": "admin1212",
+      "phone": "081212009100",
+      "address": " Logged in from Another World",
+      "id": 1,
+      "isAdmin": true
+    },
+    {
+      "name": "Asep Knalpot",
+      "email": "l2phika.flowe2er@baharsah.my.id",
+      "password": "asal1212",
+      "phone": "081212009100",
+      "address": "dsfs,df;l,dslf,\n",
+      "id": 2
+    },
+    {
+      "name": "Dion Novalagung",
+      "email": "dionnoerror@email.id",
+      "password": "dion1212",
+      "phone": "081212009100",
+      "id": 3
+    },
+    {
+      "name": "Test",
+      "email": "dionnoerror21@email.id",
+      "password": "dion2222",
+      "phone": "12345",
+      "address": "sdfsdtdsfsrdf",
+      "id": 4
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "trips": [
+    {
+      "id": 0,
+      "tourName": "Jakarta - Bali APISpec",
+      "seat": 30,
+      "avail": 10,
+      "price": 19000000,
+      "description": "Flower lorem ipsum dolor sit amet",
+      "destination": "Bali",
+      "accomodation": "Hotel Apa Hayo",
+      "transportation": "Terbang Naik Pesawat",
+      "eatenary": "IDK",
+      "duration": "1 Day 2 Nights",
+      "startDate": "3 Oct 2022"
+    },
+    {
+      "id": 1,
+      "tourName": "Jakarta - Bali APISpec",
+      "seat": 30,
+      "avail": 10,
+      "price": 10230000,
+      "description": "Flower lorem ipsum dolor sit amet",
+      "destination": "Bali"
+    },
+    {
+      "id": 2,
+      "tourName": "Jakarta - Bali APISpec",
+      "seat": 30,
+      "avail": 10,
+      "price": 10000000,
+      "description": "Flower lorem ipsum dolor sit amet",
+      "destination": "Bali"
+    }
+  ],
+  "trfs": [
+    {
+      "user": "Lebah Ganteng",
+      "tripTo": "Bali XFT 2D / 2N",
+      "imgDest": "q34324324xfnkjnwekjn34.jpg",
+      "status": 1,
+      "id": 1
+    },
+    {
+      "user": "Lebah Ganteng",
+      "tripTo": "Bali XFT 2D / 2N",
+      "imgDest": "q34324324xfnkjnwekjn34.jpg",
+      "status": 2,
+      "id": 2
+    },
+    {
+      "user": "Lebah Ganteng",
+      "tripTo": "Bali XFT 2D / 2N",
+      "imgDest": "q34324324xfnkjnwekjn34.jpg",
+      "status": 3,
+      "id": 2
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+
+{
+    "trips": [
+        [
+            {
+                "tourName" : "Jakarta - Bali APISpec",
+                "seat" : 30,
+                "avail" :10,
+                "price" : 10000000 , 
+                "description" : "Flower lorem ipsum dolor sit amet",
+                "destination" : "Bali",
+                "accomodation" :   "Terbang Naik Pesawat",
+                "eatenary" : "IDK"
+            },    {
+                "tourName" : "Jakarta - Bali APISpec",
+                "seat" : 30,
+                "avail" :10,
+                "price" : 10000000 , 
+                "description" : "Flower lorem ipsum dolor sit amet",
+                "destination" : "Bali"  
+            },    {
+                "tourName" : "Jakarta - Bali APISpec",
+                "seat" : 30,
+                "avail" :10,
+                "price" : 10000000 , 
+                "description" : "Flower lorem ipsum dolor sit amet",
+                "destination" : "Bali"  
+            }
+        ]
+        
+    ],
+    "users": [
+      { "id": 1, "body": "some comment", "postId": 1 }
+    ]
+  }
