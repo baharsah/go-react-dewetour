@@ -40,12 +40,6 @@ const CustomNavbar =
 
   // Register Status
 
-  const [emailStatusAvail , setEmailStatusAvail] = useState(null)
-  const [registerSuccess , setRegisterSuccess] = useState(null)
-  // const [hidingRegisterModal , setHidingRegisterModal] = useState(null)
-
-  //end
-  const [isOpen, usetIsOpen] = useState(false);
 
 
 
@@ -60,7 +54,6 @@ const CustomNavbar =
 
 
 const [signinData , setSigninData] = useState(); 
-const [loginSuccess , setLoginSuccess] = useState(false)
 
 const updateSigninData = e => {
   // e.preventDefault()
@@ -72,30 +65,7 @@ const updateSigninData = e => {
 const submitSigninData = e => {
   e.preventDefault()
   // console.log(data)
- checkUser(signinData.email).then((r) => {
-    if (r.data.length > 0){
-      checkAuth(signinData.email , signinData.pass).then((r) => {
-        if(r.data.length > 0 ){
-          // console.log(isAdmin(r.data.email) + "adalah admin")
-
-          setLoginSuccess(true)
-          localStorage.setItem('isLogin' , true)
-    localStorage.setItem("user" , r.data.email)
-          setTimeout(() => {
-            setLoginSuccess(false)
-          handleCloseSignin()
-            updatestatusLogin("true")
-        } , 2000
-          )
-          isAdmin(r.data.email).then((r) => {
-            if(r.data.length > 0){updatestatusAdmin(true) ;localStorage.setItem("isAdmin" , true)}
-          })  
-        }
-      })
-    }else{
-      alert("Auth Failed")
-    }
-  })
+ // check login here
 
 }
 
@@ -114,23 +84,7 @@ const submitSignupData = e => {
   e.preventDefault()
    console.log('registerEvent')
 
-   checkUser(signupData.email).then((response) => {
-
-    if(response.data.length > 0){
-      setEmailStatusAvail(true)
-    }else{
-      setRegisterSuccess(true)
-      registerUser(signupData)
-      setEmailStatusAvail(false)
-      setTimeout(() => {
-        setShowSignup(false)
-        setShowSignin(true)
-        setRegisterSuccess(false)
-        setEmailStatusAvail(false)
-      } ,2000)
-      
-    }
-   } )
+  // register user here
   // registerUser(signupData)
 
 }
@@ -156,16 +110,13 @@ return  <Navbar className='fixed-top' variant="dark" style={ { backgroundRepeat:
     <Button variant="warning" onClick={handleShowSignin} className="me-3 fw-bold pt-2 pb-2 ps-2 pe-2">Login</Button>
     <Button className="fw-bold pt-2 pb-2 ps-2 pe-2" onClick={handleShowSignup} variant="outline-warning">Signup</Button>
   
-
-    
-    <Dropdown>
   
-    
-    </Dropdown>
-      {/* {isOpen && <div style={{backgroundColor : 'white'}}> DropDown Here </div>} */}
         
   </Navbar.Collapse>
 </Container>
+
+
+
 {/* area modal */}
 
 
@@ -175,12 +126,6 @@ return  <Navbar className='fixed-top' variant="dark" style={ { backgroundRepeat:
 
         <Modal.Body>
           <form onSubmit={submitSigninData} method="post">
-          <Alert show={loginSuccess} variant="success">
-      <Alert.Heading>Mantap jiwa!</Alert.Heading>
-      <p>
-        dah bisa login gak, tuh.
-      </p>
-    </Alert>
           <Form.Group  className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Email address</Form.Label>
               <Form.Control
@@ -205,7 +150,7 @@ return  <Navbar className='fixed-top' variant="dark" style={ { backgroundRepeat:
             <Button variant="warning" type="submit" className=" fw-bold pt-2 pb-2 ps-2 pe-2 text-white">Signin</Button>
             </div>
           </form>
-        <h3>Kamu belum daftar? <a onClick={switchToRegister}>Klik sini dong!</a></h3>
+        <p>Kamu belum daftar? <a onClick={switchToRegister}>Klik sini dong!</a></p>
 
         </Modal.Body>
 
@@ -216,24 +161,6 @@ return  <Navbar className='fixed-top' variant="dark" style={ { backgroundRepeat:
         </Modal.Header>
         <Modal.Body>
         <form onSubmit={submitSignupData}>
-        <Alert show={registerSuccess} variant="success">
-      <Alert.Heading>Mantap jiwa!</Alert.Heading>
-      <p>
-register gak, tuh.
-      </p>
-    </Alert>
-    <Alert variant="warning" show={false}>
-      <Alert.Heading>Kayaknya ada yang salah, deh.</Alert.Heading>
-      <p>
-      tapi apa, ya? kayaknya dari kita, deh.
-      </p>
-    </Alert>
-    <Alert variant="warning" show={emailStatusAvail}>
-      <Alert.Heading>Email kamu udah kepake, nih.</Alert.Heading>
-      <p>
-      coba pake email lain ya, gais.
-      </p>
-    </Alert>
         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Full Name</Form.Label>
               <Form.Control
@@ -289,7 +216,7 @@ register gak, tuh.
             <Button variant="warning" type='submit' className=" fw-bold pt-2 pb-2 ps-2 pe-2 text-white">Signup</Button>
             </div>
           </form>
-        <h3>Kamu udah daftar? <a onClick={switchToLogin}>Klik sini dong!</a></h3>
+        <p>Kamu udah daftar? <a onClick={switchToLogin}>Klik sini dong!</a></p>
 
         </Modal.Body>
       </Modal>
