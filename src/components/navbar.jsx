@@ -20,26 +20,11 @@ const CustomNavbar =
 
   const nav = useNavigate()
 
-  //useEffect for localstorage
-  var [statusLogin , updatestatusLogin] = useState()
-  var [statusAdmin , updatestatusAdmin] = useState()
 
 
-  var destroySession = () => {
-    localStorage.removeItem("isLogin")
-    localStorage.removeItem("isAdmin")
-    localStorage.removeItem("user")
-    updatestatusAdmin(null)
-    updatestatusLogin(null)
-    console.log(statusLogin)
-  }
-  useEffect(() => {
-
-    updatestatusLogin(localStorage.getItem("isLogin"))
-    updatestatusAdmin(localStorage.getItem("isAdmin"))
 
 
-  } , [])
+
 
   //switchto
 
@@ -62,12 +47,7 @@ const CustomNavbar =
   //end
   const [isOpen, usetIsOpen] = useState(false);
 
-  const setIsOpen = () => {
-    usetIsOpen(true)
-    setTimeout(() => {
-      usetIsOpen(false)
-    },9000)
-  }
+
 
   // const nav = useNavigate()
   const [showSignin, setShowSignin] = useState(false);
@@ -170,45 +150,19 @@ return  <Navbar className='fixed-top' variant="dark" style={ { backgroundRepeat:
   <Navbar.Toggle aria-controls="basic-navbar-nav" />
   <Navbar.Collapse id="basic-navbar-nav">
     <Nav className="me-auto">
-      {/* <Nav.Link href="#home">Home</Nav.Link>
-      <Nav.Link href="#link">Link</Nav.Link> */}
-      {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-        <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-        <NavDropdown.Item href="#action/3.2">
-          Another action
-        </NavDropdown.Item>
-        <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-        <NavDropdown.Divider />
-        <NavDropdown.Item href="#action/3.4">
-          Separated link
-        </NavDropdown.Item>
-      </NavDropdown> */}
     </Nav>
-    {(statusLogin != "true") &&
-    <>
+  
+  
     <Button variant="warning" onClick={handleShowSignin} className="me-3 fw-bold pt-2 pb-2 ps-2 pe-2">Login</Button>
     <Button className="fw-bold pt-2 pb-2 ps-2 pe-2" onClick={handleShowSignup} variant="outline-warning">Signup</Button>
-    </>
-}
-     { (statusLogin != null) &&<>
-    <Dropdown>
-    <Button onClick={() => setIsOpen(!isOpen) } variant="warning" className="rounded-circle p-1 fw-bold"> <img className='rounded-circle' src={Profile} width="50" height='50' alt="" srcset="" /> </Button>
+  
+
     
-    <Dropdown.Menu className={'mt-3'} show={isOpen}>
-      <div style={{position : 'absolute' , transform : 'translateY(-25px)'  }}><CaretUp  style={{ color : "white" ,  width : 30 , height : 30}}></CaretUp></div>
-      { (isAdmin != null) && <><Dropdown.Item eventKey="2" onClick={() => {
-          nav('trx')
-      }}>Trip</Dropdown.Item>
-      <Dropdown.Item onClick={destroySession}>Logout</Dropdown.Item></> }
-      { !isAdmin && <><Dropdown.Item eventKey="2" onClick={() => {
-          nav('profile')
-      } }>Profile</Dropdown.Item><Dropdown.Item eventKey="2">Pay</Dropdown.Item>
-      <Dropdown.Item onClick={destroySession}>Logout</Dropdown.Item></> }
-    </Dropdown.Menu>
+    <Dropdown>
+  
+    
     </Dropdown>
-    </>
-}
-    {/* {isOpen && <div style={{backgroundColor : 'white'}}> DropDown Here </div>} */}
+      {/* {isOpen && <div style={{backgroundColor : 'white'}}> DropDown Here </div>} */}
         
   </Navbar.Collapse>
 </Container>
