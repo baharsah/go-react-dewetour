@@ -1,0 +1,7 @@
+url: http://localhost:3000
+tunnel: 5de32e06-02d1-4973-bd14-b83a02623eb5
+credentials-file: ~/.cloudflared/5de32e06-02d1-4973-bd14-b83a02623eb5.json
+
+ingress:
+  - hostname: dw-tour.tamaya.my.id
+    service: http://localhost:3000

@@ -13,18 +13,17 @@ import Profile from '../assets/bs/profile.png'
 import { Dropdown , Alert } from 'react-bootstrap';
 import { BsFillCaretUpFill as CaretUp } from "react-icons/bs";
 import { registerUser , checkUser, checkAuth, isAdmin} from '../modules/axios';
+import { useMutation } from 'react-query';
+
+import { API } from '../config/api';
 
 
 const CustomNavbar = 
 () => {
 
+  // navigation helper
+
   const nav = useNavigate()
-
-
-
-
-
-
 
   //switchto
 
@@ -37,9 +36,6 @@ const CustomNavbar =
     setShowSignup(false)
 
   }
-
-  // Register Status
-
 
 
 

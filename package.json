@@ -4,9 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 8080",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "pm2": "pm2 start ec.config.js"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.6",
