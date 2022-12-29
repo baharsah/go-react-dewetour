@@ -11,4 +11,5 @@ type RegisterRequest struct {
 	Address  string `gorm :"type : varchar (255)" json:"address" validate:"required"`
 	FullName string `gorm: "type: varchar(255)" json:"name" validate:"required"`
 	Phone    string `gorm : "type: varchar(255)" json:"phone" validate:"required"`
+	Name string `json:"name"`
 }

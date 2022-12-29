@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.scss'
+import { ReactQueryDevtools } from 'react-query/devtools'
 import { QueryClient ,  QueryClientProvider } from 'react-query'
 // import { UserContextProvider } from './context/userProvider'
 import { UserContextProvider } from './components/context/userProvider'
@@ -21,6 +22,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <UserContextProvider>
       <QueryClientProvider client={client}>
         <App />
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
       </UserContextProvider>
   </React.StrictMode>

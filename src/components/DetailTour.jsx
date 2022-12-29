@@ -9,13 +9,30 @@ import ImgTime from '../assets/mi/time.svg'
 import ImgPlane from '../assets/mi/plane.svg'
 import { Form } from 'react-bootstrap'
 import DataDetail from '../dummy/data'
-import { useState } from 'react'
+import { useState , useEffect } from 'react'
 import { useParams ,useNavigate} from 'react-router'
+import anime from "animejs/lib/anime.es.js"
 
 
 
 function DetailTour() {
 
+
+  useEffect(() => {
+
+
+
+
+    anime({
+      targets: '.animation',
+      translateX : [300 ,0],
+      opacity : [0 , 1] ,
+      easing: 'easeInOutQuad', 
+      duration : 300
+      
+    });
+
+  }, [])
   const navi = useNavigate()
 
  const  onExitStatus = () => {
@@ -51,7 +68,7 @@ function DetailTour() {
   
  }
   return (
-    <>
+    <div className='animation'>
     {/* <Container style={{height : "50px"}}></Container> */}
     <Container className='mt-5 pt-5 ms-5 ps-5'>
       {/* Whitespaces */}
@@ -143,7 +160,7 @@ function DetailTour() {
         <Modal.Body>Order berhasil! silahkan <b>sentuh atau klik apa saja pada tampilan ini </b>untuk pergi ke bukti bayar anda</Modal.Body>
 
       </Modal>
-    </>
+    </div>
   )
 }
 

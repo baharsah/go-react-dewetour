@@ -58,12 +58,35 @@ const updateSigninData = e => {
 })
 }
 
-const submitSigninData = e => {
-  e.preventDefault()
-  // console.log(data)
- // check login here
 
-}
+const submitSigninData = useMutation(async (e) => {
+  e.preventDefault();
+  try {
+
+    // Configuration Content-type
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+      },
+    };
+
+    // Data body
+    const body = JSON.stringify(signinData);
+
+    // Insert data user to database
+    const response = await API.post('/login', body, config);
+
+    // Handling response here
+  } catch (error) {
+    const alert = (
+      <Alert variant="danger" className="py-1">
+        Failed
+      </Alert>
+    );
+    setMessage(alert);
+    console.log(error);
+  }
+})
 
 const [signupData , setSignupData] = useState(); 
 
@@ -76,14 +99,55 @@ const updateSignupData = e => {
 })
 }
 
-const submitSignupData = e => {
-  e.preventDefault()
-   console.log('registerEvent')
+const submitSignupData = useMutation(async (e)  => {
+  try {
+    e.preventDefault();
 
-  // register user here
-  // registerUser(signupData)
+    // Configuration Content-type
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+      },
+    };
 
-}
+    // Data body
+    const body = JSON.stringify(signupData);
+
+    // Insert data user to database
+    const response = await API.post('/register', body, config);
+
+    // Notification
+    if (response.data.status === 'success...') {
+      const alert = (
+        <Alert variant="success" className="py-1">
+          Success
+        </Alert>
+      );
+      setMessage(alert);
+      setForm({
+        name: '',
+        email: '',
+        password: '',
+      });
+    } else {
+      const alert = (
+        <Alert variant="danger" className="py-1">
+          Failed
+        </Alert>
+      );
+      setMessage(alert);
+    }
+  } catch (error) {
+    const alert = (
+      <Alert variant="danger" className="py-1">
+        Failed
+      </Alert>
+    );
+    setMessage(alert);
+    console.log(error);
+  }
+
+})
 
 // console.log(e)
 
@@ -121,7 +185,7 @@ return  <Navbar className='fixed-top' variant="dark" style={ { backgroundRepeat:
    
 
         <Modal.Body>
-          <form onSubmit={submitSigninData} method="post">
+          <form onSubmit={(e) => submitSigninData.mutate(e)} method="post">
           <Form.Group  className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Email address</Form.Label>
               <Form.Control
@@ -156,13 +220,13 @@ return  <Navbar className='fixed-top' variant="dark" style={ { backgroundRepeat:
           <Modal.Title>Register</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        <form onSubmit={submitSignupData}>
+        <form onSubmit={(e) => submitSignupData.mutate(e)}>
         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Full Name</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="e.g. Asep Knalpot"
-                name='nama' 
+                name='name' 
                 className=''
                 onChange={updateSignupData}
               />
@@ -182,7 +246,7 @@ return  <Navbar className='fixed-top' variant="dark" style={ { backgroundRepeat:
               <Form.Control
                 type="password"
                 placeholder="password"
-                name='pass' 
+                name='password' 
                 onChange={updateSignupData}
 
                 className=''
