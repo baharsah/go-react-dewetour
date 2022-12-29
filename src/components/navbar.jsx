@@ -5,7 +5,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Button from 'react-bootstrap/Button';
 import NavbarBG from '../assets/e.png';
 import Icn from '../assets/Icon.png';
-import React, { useState , useEffect } from 'react';
+import React, { useState , useEffect , useContext } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
@@ -16,10 +16,14 @@ import { registerUser , checkUser, checkAuth, isAdmin} from '../modules/axios';
 import { useMutation } from 'react-query';
 
 import { API } from '../config/api';
+import { UserContext } from './context/userProvider';
+import DropdownProfile from './DropdownProfile';
 
 
 const CustomNavbar = 
 () => {
+
+  const [state , dispatch] = useContext(UserContext)
 
   // navigation helper
 
@@ -37,7 +41,8 @@ const CustomNavbar =
 
   }
 
-
+var [message , setMessage] = useState(null)
+var [profile , updateProfile] = useState(null)
 
   // const nav = useNavigate()
   const [showSignin, setShowSignin] = useState(false);
@@ -59,6 +64,8 @@ const updateSigninData = e => {
 }
 
 
+console.log(state.user)
+
 const submitSigninData = useMutation(async (e) => {
   e.preventDefault();
   try {
@@ -76,11 +83,37 @@ const submitSigninData = useMutation(async (e) => {
     // Insert data user to database
     const response = await API.post('/login', body, config);
 
+    if (response?.status === 200) {
+
+      dispatch({
+        type : "LOGIN_SUCCESS" , 
+        payload : response.data.data
+      })
+
+      updateProfile(response.data.data)
+      setShowSignin(false)
+
+      console.log(state.user.is_admin)
+
+      
+
+      if(response.data.data.is_admin === 1) {
+
+        // aksi render dropdown untuk admin disini 
+      
+      }else{
+
+        // aksi render dropdown untuk user disini 
+
+      }
+
+    }
+
     // Handling response here
   } catch (error) {
     const alert = (
       <Alert variant="danger" className="py-1">
-        Failed
+        response.data.message
       </Alert>
     );
     setMessage(alert);
@@ -117,22 +150,24 @@ const submitSignupData = useMutation(async (e)  => {
     const response = await API.post('/register', body, config);
 
     // Notification
-    if (response.data.status === 'success...') {
+    if (response.status == 200) {
       const alert = (
         <Alert variant="success" className="py-1">
           Success
         </Alert>
       );
-      setMessage(alert);
-      setForm({
-        name: '',
-        email: '',
-        password: '',
-      });
+
+      setMessage(alert)
+      await setTimeout(() => {
+
+      } , 1000)
+     setMessage(null)
+        console.log("Switcher must be there")
+
     } else {
       const alert = (
         <Alert variant="danger" className="py-1">
-          Failed
+          {response.data.message}
         </Alert>
       );
       setMessage(alert);
@@ -140,7 +175,8 @@ const submitSignupData = useMutation(async (e)  => {
   } catch (error) {
     const alert = (
       <Alert variant="danger" className="py-1">
-        Failed
+        <h1>Pendaftaran gagal</h1>
+        
       </Alert>
     );
     setMessage(alert);
@@ -167,8 +203,17 @@ return  <Navbar className='fixed-top' variant="dark" style={ { backgroundRepeat:
     </Nav>
   
   
+  {  (state.isLogin == false ) &&<div>
     <Button variant="warning" onClick={handleShowSignin} className="me-3 fw-bold pt-2 pb-2 ps-2 pe-2">Login</Button>
     <Button className="fw-bold pt-2 pb-2 ps-2 pe-2" onClick={handleShowSignup} variant="outline-warning">Signup</Button>
+  </div> }
+
+   { (state.isLogin == true) &&<DropdownProfile profile={state.user}>
+    <div className="rounded-circle border border-warning" >
+        <img src={Profile} className="rounded-circle" width="50px" height="50px" />
+      </div>
+    </DropdownProfile>
+}
   
   
         
@@ -185,6 +230,7 @@ return  <Navbar className='fixed-top' variant="dark" style={ { backgroundRepeat:
    
 
         <Modal.Body>
+          {message}
           <form onSubmit={(e) => submitSigninData.mutate(e)} method="post">
           <Form.Group  className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Email address</Form.Label>
@@ -201,7 +247,7 @@ return  <Navbar className='fixed-top' variant="dark" style={ { backgroundRepeat:
               <Form.Control
                 type="password"
                 placeholder="password"
-                name='pass' 
+                name='password' 
                 onChange={updateSigninData}
                 className=''
               />
@@ -220,6 +266,7 @@ return  <Navbar className='fixed-top' variant="dark" style={ { backgroundRepeat:
           <Modal.Title>Register</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {message}
         <form onSubmit={(e) => submitSignupData.mutate(e)}>
         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Full Name</Form.Label>

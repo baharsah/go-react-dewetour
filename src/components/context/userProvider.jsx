@@ -4,7 +4,7 @@ export const UserContext = createContext();
 
 const initialState = {
   isLogin: false,
-  user: {},
+  user: {}
 };
 
 const reducer = (state, action) => {
