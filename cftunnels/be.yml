@@ -1,0 +1,3 @@
+tunnel: 2f002683-a9c1-4418-8b08-f0eb5d7e2604
+credentials-file: /home/baharsah/.cloudflared/2f002683-a9c1-4418-8b08-f0eb5d7e2604.json
+noTLSVerify: true

@@ -47,7 +47,7 @@ function GroupTour() {
       {
            trips?.map((a , b) => {
             return (
-      <CardGroupTour image={a.ImageTrips[0].URL} slot={`${a.Quantity}/0`} id={a.ID} price={c(a.Price)} dest={a.destinationName} desc={a.Title}></CardGroupTour>
+      <CardGroupTour images={a.ImageTrips} image={a.ImageTrips[0].URL} slot={`0/${a.Quantity}`} id={a.ID} price={c(a.Price)} dest={a.destinationName} desc={a.Title}></CardGroupTour>
             )
        })
       }

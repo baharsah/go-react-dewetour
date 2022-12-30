@@ -1,0 +1,3 @@
+tunnel: cdc1944e-bbaf-4dd8-9d9b-0d2fb7fd8551
+credentials-file: /home/baharsah/.cloudflared/cdc1944e-bbaf-4dd8-9d9b-0d2fb7fd8551.json
+noTLSVerify: true

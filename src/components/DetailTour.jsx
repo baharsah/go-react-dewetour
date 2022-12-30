@@ -40,7 +40,6 @@ function DetailTour() {
 
 
 
-
     anime({
       targets: '.animation',
       translateX : [300 ,0],
@@ -49,8 +48,8 @@ function DetailTour() {
       duration : 300
       
     });
-
-  }, [])
+    
+  })
   const navi = useNavigate()
 
  const  onExitStatus = () => {
@@ -102,13 +101,15 @@ const diffNights = diffDays - 1;
   <h1 >Loading...</h1>
   </>)
  }else{
+
+
   return (
     <div className='animation'>
     {/* <Container style={{height : "50px"}}></Container> */}
     <Container className='mt-5 pt-5 ms-5 ps-5'>
       {/* Whitespaces */}
     </Container>
-    <ImageExpo destination={trip?.destinationName} title={trip?.Title}>
+    <ImageExpo images={trip?.ImageTrips} destination={trip?.destinationName} title={trip?.Title}>
 
     </ImageExpo>
     <Container className='mt-5 mb-5'>
