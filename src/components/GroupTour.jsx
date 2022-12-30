@@ -6,11 +6,26 @@ import  Img4 from '../assets/bs/img4.png'
 import  Img5 from '../assets/bs/img5.png'
 import  Img6 from '../assets/bs/img6.png'
 import CardGroupTour from './CardGroupTour'
-import dataTour from "../dummy/data"
+import {API} from "../config/api"
+import { useQuery } from 'react-query'
 
 function GroupTour() {
 
-   const  [stateData , changeStateData]  = useState(dataTour)
+  let {data : trips , status} = useQuery("tripsCache"  , async () => {
+
+
+    const response =  await API.get("/trips")
+    return response.data.data
+  })
+
+  
+  // console.log(trips)
+  if (status === 'success') {
+    console.log("ini data" , trips)
+
+    // return <div>{data.name}</div>;
+  }
+  
 
    function c(x) {
     x = x.toString();
@@ -30,9 +45,9 @@ function GroupTour() {
       {/* card */}
 
       {
-           stateData.map((a , b) => {
+           trips?.map((a , b) => {
             return (
-      <CardGroupTour image={Img1} slot={`${a.seat}/${a.seat - a.avail}`} id={b} price={c(a.price)} dest={a.destination} desc={a.description}></CardGroupTour>
+      <CardGroupTour image={a.ImageTrips[0].URL} slot={`${a.Quantity}/0`} id={a.ID} price={c(a.Price)} dest={a.destinationName} desc={a.Title}></CardGroupTour>
             )
        })
       }

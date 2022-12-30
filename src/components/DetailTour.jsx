@@ -1,5 +1,6 @@
 import React from 'react'
 import { Row , Col , Placeholder , Button} from 'react-bootstrap'
+import { useQuery } from 'react-query'
 import { Container , Modal} from 'react-bootstrap'
 import ImageExpo from './ImageExpo'
 import ImgCalendar from '../assets/mi/calendar.svg'
@@ -12,10 +13,27 @@ import DataDetail from '../dummy/data'
 import { useState , useEffect } from 'react'
 import { useParams ,useNavigate} from 'react-router'
 import anime from "animejs/lib/anime.es.js"
+import {API} from "../config/api"
 
 
 
 function DetailTour() {
+  const {id} = useParams()
+
+
+  let {isFetching , data : trip , status} = useQuery("tripCache"  , async () => {
+
+
+    const response =  await API.get( `/trip/${id}`)
+    return response.data.data
+  })
+
+   // console.log(trips)
+   if (status === 'success') {
+    console.log("ini data" , trip)
+
+    // return <div>{data.name}</div>;
+  }
 
 
   useEffect(() => {
@@ -39,9 +57,17 @@ function DetailTour() {
   navi('/tour/pending')
  }
 
-  const {id} = useParams()
+//  counter datetime 
 
- const  [data , modData]  = useState(DataDetail)
+const from = new Date(trip?.FromDate);
+const to = new Date(trip?.ToDate);
+
+const diffTime = Math.abs(to - from);
+const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+const diffNights = diffDays - 1;
+
+
+//  const  [data , modData]  = useState(DataDetail)
  var [counter , setCounter] = useState(1)
  const [show, setShow] = useState(false);
 
@@ -60,20 +86,29 @@ function DetailTour() {
  }
 
  var incrementalValue = ()=> {
-  if (data[id].avail == counter) {setCounter(data[id].avail) } else { setCounter (counter + 1) } 
+  if (trip?.Quota == counter) {setCounter(trip?.Quota) } else { setCounter (counter + 1) } 
  }
  
  var decrementalValue = ()=> {
   if (counter == 1) {setCounter(1) } else { setCounter (counter - 1) } 
   
  }
+ if(isFetching){
+
+  return(<>
+  <Container className='mt-5 pt-5 ms-5 ps-5'>
+  {/* Whitespaces */}
+</Container>
+  <h1 >Loading...</h1>
+  </>)
+ }else{
   return (
     <div className='animation'>
     {/* <Container style={{height : "50px"}}></Container> */}
     <Container className='mt-5 pt-5 ms-5 ps-5'>
       {/* Whitespaces */}
     </Container>
-    <ImageExpo destination={data[0].destination} title={data[id].tourName}>
+    <ImageExpo destination={trip?.destinationName} title={trip?.Title}>
 
     </ImageExpo>
     <Container className='mt-5 mb-5'>
@@ -82,43 +117,37 @@ function DetailTour() {
         <Row>
           <Col>
             <h5 className='text-muted'>Accomodation</h5> 
-            <p> <img src={ImgHotel} alt="" /> {data[id].accomodation}</p>        
+            <p> <img src={ImgHotel} alt="" /> {trip?.Accomodation}</p>        
          
           </Col>
           <Col>
           <h5 className='text-muted'>Transportation</h5> 
-          <p> <img src={ImgPlane} alt="" /> {data[id].transportation}</p>        
+          <p> <img src={ImgPlane} alt="" /> {trip?.Transportation}</p>        
 
           </Col>
           <Col>
           <h5 className='text-muted'>Eat</h5> 
-          <p> <img src={ImgMeal} alt="" /> {data[id].eatenary}</p>        
+          <p> <img src={ImgMeal} alt="" /> {trip?.Eatenary}</p>        
    
           </Col>
           <Col>
           <h5 className='text-muted'>Duration</h5> 
-          <p> <img src={ImgTime} alt="" /> {data[id].duration}</p>         
+          <p> <img src={ImgTime} alt="" /> {diffNights} Hari {diffDays} Malam</p>         
           </Col>
           <Col>
           <h5 className='text-muted'>Date Trip</h5> 
-          <p> <img src={ImgCalendar} alt="" /> {data[id].startDate}</p>        
+          <p> <img src={ImgCalendar} alt="" /> {trip?.FromDate}</p>        
           </Col>
         </Row>
         <Row>
           <Col>
           <h3>Description</h3>
-          <p className='text-muted'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi omnis, 
-          laudantium nulla voluptas doloremque molestias quod pariatur laboriosam. 
-          Nam, dignissimos ratione reiciendis mollitia sed eveniet pariatur eum laborum deleniti quos.
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio, atque. 
-          Ratione perspiciatis numquam ut suscipit illum minima corrupti eveniet sed facilis nihil obcaecati laborum neque, 
-          labore corporis consequuntur,
-           praesentium vitae!</p>
+          <p className='text-muted'>{trip?.Description}</p>
           </Col>
         </Row>
         <Row className='border-bottom mb-3'>
           <Col>
-          <h3><span className='text-warning'>{c(data[id].price)} </span> / Person</h3>
+          <h3><span className='text-warning'>{c(trip?.Price)} </span> / Person</h3>
           </Col>
           <Col xl>&nbsp;</Col>
           <Col xl>&nbsp;</Col>
@@ -147,7 +176,7 @@ function DetailTour() {
           </Col>
           <Col xl>&nbsp;</Col>
           <Col xs>
-          <h3 className='text-warning'>{c(data[id].price * counter)}</h3>
+          <h3 className='text-warning'>{c(trip?.Price * counter)}</h3>
           </Col>
         </Row>
         <Row className='flex-row-reverse'>
@@ -163,5 +192,7 @@ function DetailTour() {
     </div>
   )
 }
+ }
+ 
 
 export default DetailTour

@@ -41,7 +41,7 @@ func (repo *repo) DeleteTrip(trip models.Trips) (models.Trips, error) {
 func (r *repo) GetTrip(id int) (models.Trips, error) {
 
 	var trips models.Trips
-	err := r.db.Debug().Preload("ImageTrips").Preload("Country").First(&trips).Error
+	err := r.db.Debug().Preload("ImageTrips").Preload("Country").First(&trips, id).Error
 	return trips, err
 
 }

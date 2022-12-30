@@ -59,8 +59,10 @@ func (h *userRepoHandler) CreateUser(res http.ResponseWriter, req *http.Request)
 	}
 
 	validation := validator.New()
-	validation.RegisterValidation("email_exist", userValdilator.IsSameAsExistEmail)
+	validation.RegisterValidation("emailExist", userValdilator.IsSameAsExistEmail)
 	err := validation.Struct(request)
+
+	//validation area
 
 	if err != nil {
 
@@ -79,16 +81,18 @@ func (h *userRepoHandler) CreateUser(res http.ResponseWriter, req *http.Request)
 	}
 
 	user := models.User{
-		Name:     request.FullName,
+		Name:     request.Name,
 		Email:    request.Email,
 		Password: password,
 		Address:  request.Address,
 	}
+	log.Println(user)
 	data, err := h.UserRepo.SetUser(user)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		response := resultDito.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
 		json.NewEncoder(res).Encode(response)
+
 	}
 
 	res.WriteHeader(http.StatusOK)

@@ -13,4 +13,5 @@ type TripRequest struct {
 	Night       int    `form:"night"`
 	Quota       uint   `form:"quota"`
 	Description string `form:"description"`
+	Price       int    `form:"price"`
 }

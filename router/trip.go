@@ -17,4 +17,6 @@ func TripRoute(r *mux.Router) {
 	r.HandleFunc("/trips", h.GetTrips).Methods(http.MethodGet)
 	r.HandleFunc("/trip", middleware.UploadFilesTrip(h.SetTrip)).Methods(http.MethodPost)
 	r.HandleFunc("/trip/{id}", h.DeleteTrip).Methods(http.MethodDelete)
+	r.HandleFunc("/trip/{id}", h.GetTrip).Methods(http.MethodGet)
+
 }
