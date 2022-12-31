@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState , useContext } from 'react'
 import  Img1 from '../assets/bs/img1.png'
 import  Img2 from '../assets/bs/img2.png'
 import  Img3 from '../assets/bs/img3.png'
@@ -8,8 +8,13 @@ import  Img6 from '../assets/bs/img6.png'
 import CardGroupTour from './CardGroupTour'
 import {API} from "../config/api"
 import { useQuery } from 'react-query'
+import {Button , Modal} from 'react-bootstrap'
+import { UserContext } from './context/userProvider';
+
 
 function GroupTour() {
+
+  var [state , dispatch] = useContext(UserContext)
 
   let {data : trips , status} = useQuery("tripsCache"  , async () => {
 
@@ -18,10 +23,24 @@ function GroupTour() {
     return response.data.data
   })
 
+
+  let {data : kountries} = useQuery(`kountriCache`  , async () => {
+
+
+
+    const response =  await API.get("/country")
+    return response.data.data
+  })
+
+  const [showCountry, setCountryShow] = useState(false);
+
+  const handleCountryClose = () => setCountryShow(false);
+  const handleCountryShow = () => setCountryShow(true);
+
   
   // console.log(trips)
   if (status === 'success') {
-    console.log("ini data" , trips)
+    // console.log("ini data" , trips)
 
     // return <div>{data.name}</div>;
   }
@@ -40,14 +59,35 @@ function GroupTour() {
 
   return (
     <>
-    <h1 className={'text-center mt-5 mb-5'}>Group Tour</h1>
+
+    
+
+    <h1 className={'text-center mt-5 mb-5'}>Group Tour {(state?.user.is_admin == 1 ) &&<><Button className="m-1" style={ {align : 'center' }}>Add Trip</Button><Button onClick={setCountryShow} style={ {align : 'center' }}>Country Editor</Button></> }</h1>
+    {/* Country Editor  */}
+
+    <Modal show={showCountry} onHide={handleCountryClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {kountries?.map((a) => <h5>{a.Country} <Button>Edit</Button><Button variant="danger" className='m-2'>Delete</Button></h5> )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCountryClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleCountryClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     <div className='d-flex ms-5 me-5 flex-wrap justify-content-around'>
       {/* card */}
 
       {
            trips?.map((a , b) => {
             return (
-      <CardGroupTour images={a.ImageTrips} image={a.ImageTrips[0].URL} slot={`0/${a.Quantity}`} id={a.ID} price={c(a.Price)} dest={a.destinationName} desc={a.Title}></CardGroupTour>
+      <CardGroupTour data={a} countries={kountries} images={a.ImageTrips} image={a.ImageTrips[0].URL} slot={`0/${a.Quantity}`} id={a.ID} price={c(a.Price)} dest={a.destinationName} desc={a.Title}></CardGroupTour>
             )
        })
       }

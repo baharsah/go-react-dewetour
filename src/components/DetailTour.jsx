@@ -42,14 +42,14 @@ function DetailTour() {
 
     anime({
       targets: '.animation',
-      translateX : [300 ,0],
-      opacity : [0 , 1] ,
+      scale : [0 ,1],
+      // opacity : [0 , 1] ,
       easing: 'easeInOutQuad', 
       duration : 300
       
     });
     
-  })
+  } , [])
   const navi = useNavigate()
 
  const  onExitStatus = () => {
