@@ -1,31 +1,47 @@
-import React , {useContext} from 'react'
+import React , {useContext , useEffect} from 'react'
 import CustomNavbar from './components/navbar'
 import Footer from './components/Footer';
-import { BrowserRouter as Router, Routes ,Route } from 'react-router-dom';
 import Home from './components/Home'
+import { BrowserRouter as Router, Routes ,Route } from 'react-router-dom';
+
 import DetailTour from './components/DetailTour'
 import PaymentPending from './components/PaymentPending';
 import Profile from './components/Profile';
 import IncTrx from './components/IncTrx';
 import { UserContext } from './components/context/userProvider'; 
-import { useContext } from 'react'
+import { API, setAuthToken } from './config/api';
+import { useNavigate } from 'react-router-dom';
 
-const [state, dispatch] = useContext(UserContext);
+// init token on axios every time the app is refreshed
 
+
+
+
+
+
+function App() {
+
+var   navigate = useNavigate()
+
+const [ state, dispatch ] = useContext(UserContext);
+
+  
 
 useEffect(() => {
-  if (localStorage.token) {
-    setAuthToken(localStorage.token);
+
+  
+  if (localStorage.getItem('token')) {
+    setAuthToken(localStorage.getItem("token"));
   }
 
   // Redirect Auth
   if (state.isLogin === false) {
-    navigate('/auth');
+    // navigate('/auth');
   } else {
     if (state.user.status === 1) {
-      // navigate('/product-admin');
+
     } else if (state.user.status === 0) {
-      navigate('/');
+      // navigate('/');
     }
   }
 }, [state]);
@@ -43,9 +59,10 @@ const checkUser = async () => {
     }
 
     // Get user data
-    let payload = response.data.data.user;
+    let payload = response.data.data;
+    
     // Get token from local storage
-    payload.token = localStorage.token;
+    payload.token = localStorage.getItem("token");
 
     // Send data to useContext
     dispatch({
@@ -58,20 +75,16 @@ const checkUser = async () => {
 };
 
 useEffect(() => {
-  if (localStorage.token) {
+  if (localStorage.getItem("token") != null) {
     checkUser();
   }
 }, []);
 
 
-
-
-function App() {
-
   return (
  
     <>
-    <Router>
+
 
     <CustomNavbar></CustomNavbar>
     <Routes>
@@ -87,7 +100,7 @@ function App() {
     {/* PR for react cards */}
     {/* footer  */}
     {/* add router */}
-    </Router>
+
 
     </>
 
