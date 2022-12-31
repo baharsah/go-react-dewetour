@@ -7,14 +7,50 @@ import  Img5 from '../assets/bs/img5.png'
 import  Img6 from '../assets/bs/img6.png'
 import CardGroupTour from './CardGroupTour'
 import {API} from "../config/api"
-import { useQuery } from 'react-query'
-import {Button , Modal} from 'react-bootstrap'
+import { useQuery} from 'react-query'
+import {Button , Modal , InputGroup , Form , Container , Row , Col} from 'react-bootstrap'
 import { UserContext } from './context/userProvider';
 
 
 function GroupTour() {
 
+  // perintah edit disini
+
+
+
   var [state , dispatch] = useContext(UserContext)
+
+  const [ctryUpdateStatus ,setCtryUpdateStatus] = useState(null)
+  const [ctryDeleteStatus, setCtryDeleteStatus] = useState(null)
+  const [ctryEditCount , setCtryEditCount] = useState(0)
+
+  const resetCtryStatus = () => {
+    setCtryDeleteStatus(null)
+    setCtryUpdateStatus(null)
+    setCtryEditCount(0)
+  } 
+  // perintah edit disini
+
+  var updateDataCountry = async (id , country) => {
+    try{
+    response = await API.patch(`/country/${id}` ,{
+      Country : country
+    })
+
+    console.log("helo" , response) 
+
+      if (response.status == 200){
+        setCtryUpdateStatus(true)
+      }else{
+        throw new Error(response.status)
+      }
+    }catch(e){
+
+      setCtryUpdateStatus(false)
+      
+
+    }
+  }
 
   let {data : trips , status} = useQuery("tripsCache"  , async () => {
 
@@ -24,7 +60,7 @@ function GroupTour() {
   })
 
 
-  let {data : kountries} = useQuery(`kountriCache`  , async () => {
+  let {data : kountries , refetch} = useQuery(`kountriCache`  , async () => {
 
 
 
@@ -34,7 +70,7 @@ function GroupTour() {
 
   const [showCountry, setCountryShow] = useState(false);
 
-  const handleCountryClose = () => setCountryShow(false);
+  const handleCountryClose = () => { setCountryShow(false); resetCtryStatus() }
   const handleCountryShow = () => setCountryShow(true);
 
   
@@ -67,10 +103,35 @@ function GroupTour() {
 
     <Modal show={showCountry} onHide={handleCountryClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Edit Countries</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {kountries?.map((a) => <h5>{a.Country} <Button>Edit</Button><Button variant="danger" className='m-2'>Delete</Button></h5> )}
+          <Container>
+            <Row>
+          {kountries?.map((a) =>       {
+
+            
+  
+          
+          return <Form onSubmit={(e) => { e.preventDefault() ; updateDataCountry( a.IDCountries ,   e.target.elements.Country.value) ; refetch() ; e.target.elements.Country.value = null} }><InputGroup className="mb-3">
+        <Form.Control
+          name={"Country"}
+          placeholder={a.Country}
+        />
+        <Button variant="primary" type="submit" id="button-addon2">
+          Edit
+        </Button>
+        {/* delete request by id button */}
+        <Button variant="danger"  id="button-addon2">
+          Delete
+        </Button>
+      </InputGroup></Form>}
+       )}
+      </Row>
+      <Row>
+      <Button variant="warning">Add Country Field</Button>
+      </Row>
+      </Container>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCountryClose}>
