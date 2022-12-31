@@ -22,9 +22,9 @@ useEffect(() => {
   if (state.isLogin === false) {
     navigate('/auth');
   } else {
-    if (state.user.status === 'admin') {
+    if (state.user.status === 1) {
       // navigate('/product-admin');
-    } else if (state.user.status === 'customer') {
+    } else if (state.user.status === 0) {
       navigate('/');
     }
   }

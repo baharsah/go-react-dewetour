@@ -188,3 +188,30 @@ func (h *userRepoHandler) GetUser(res http.ResponseWriter, req *http.Request) {
 	response := resultDito.SuccessResult{Code: http.StatusOK, Data: user}
 	json.NewEncoder(res).Encode(response)
 }
+
+func (h *userRepoHandler) CheckAuth(res http.ResponseWriter, req *http.Request) {
+	res.Header().Set("Content-Type", "application/json")
+	userInfo := req.Context().Value("userInfo").(jwt.MapClaims)
+	userID := int(userInfo["userID"].(float64))
+
+	idCollection := models.User{ID: userID}
+	user, err := h.UserRepo.GetUserID(idCollection)
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		response := resultDito.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+		json.NewEncoder(res).Encode(response)
+		return
+	}
+
+	authCheck := authDito.CheckAuthResponse{
+		Id:     user.ID,
+		Name:   user.Name,
+		Email:  user.Email,
+		Status: user.IsAdmin,
+	}
+
+	res.Header().Set("Content-Type", "application/json")
+	response := resultDito.SuccessResult{Code: http.StatusOK, Data: authCheck}
+	json.NewEncoder(res).Encode(response)
+
+}
