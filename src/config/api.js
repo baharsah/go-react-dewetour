@@ -4,7 +4,7 @@ import axios, { Axios } from "axios"
 export const API  = axios.create({
 
 
-    baseURL : "http://localhost:5001/api/v1",
+    baseURL : "https://apidwtour.tamaya.my.id/api/v1",
 
 })
 
