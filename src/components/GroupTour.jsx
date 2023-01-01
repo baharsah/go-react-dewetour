@@ -162,6 +162,15 @@ for (let key in dataTrip) {
     return x;
 }
 
+const addCountry = (country) => {
+
+API.post('country' ,  { Country: country})
+
+handleCountryClose()
+refetch()
+
+    
+}
 
   //  stateData.map((a , b)=> {console.log(a,b)})
 
@@ -295,6 +304,19 @@ for (let key in dataTrip) {
         </Button>
       </InputGroup></Form>}
        )}
+      </Row>
+    
+      <Row>
+        <Form onSubmit={(e) => { e.preventDefault() ; addCountry(e.target.elements.Country.value) ; refetch() ; e.target.elements.Country.value = null} }>
+          <Form.Group>
+          <Form.Control className='m-3'
+          name={"Country"}
+        />
+          </Form.Group>
+      <Button variant="primary" type='submit' className='m-3'>Submit</Button>
+
+          </Form>
+            
       </Row>
       <Row>
       <Button variant="warning">Add Country Field</Button>
