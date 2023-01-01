@@ -1,15 +1,21 @@
 // import bootstrap from 'bootstrap'
-import React from 'react'
+import React , {useEffect} from 'react'
 import {Container , Card} from "react-bootstrap"
 import GaransiImg from '../assets/garansi.svg'
 import OppaKorea from '../assets/oppakorea.svg'
 import Agent from '../assets/agent.svg'
 import Support from '../assets/support.svg'
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 function StaticContainer() {
+
+  useEffect(() => {
+    AOS.init();
+  }, [])
   return (
     <Container className='d-flex justify-content-evenly mt-n1' style={{marginTop : "-60px"}}>
-    <Card style={{ width: '18rem' }}>
+    <Card  data-aos="fade-down" style={{ width: '18rem' }}>
       <Card.Body className='pb-5'>
         {/* <Card.Title>Card Title</Card.Title> */}
         <Card.Subtitle className="mb-2 d-flex text-muted mt-3">
@@ -25,7 +31,7 @@ function StaticContainer() {
         <Card.Link href="#">Another Link</Card.Link> */}
       </Card.Body>
     </Card>
-    <Card style={{ width: '18rem' }}>
+    <Card  data-aos="fade-up" style={{ width: '18rem' }}>
       <Card.Body className='pb-5'>
         {/* <Card.Title>Card Title</Card.Title> */}
         <Card.Subtitle className="mb-2 d-flex text-muted mt-3">
@@ -41,7 +47,7 @@ function StaticContainer() {
         <Card.Link href="#">Another Link</Card.Link> */}
       </Card.Body>
     </Card>
-    <Card style={{ width: '18rem' }}>
+    <Card  data-aos="fade-right" style={{ width: '18rem' }}>
       <Card.Body className='pb-5'>
         {/* <Card.Title>Card Title</Card.Title> */}
         <Card.Subtitle className="mb-2 d-flex text-muted mt-3">
@@ -57,7 +63,7 @@ function StaticContainer() {
         <Card.Link href="#">Another Link</Card.Link> */}
       </Card.Body>
     </Card>
-    <Card style={{ width: '18rem' }}>
+    <Card  data-aos="fade-left" style={{ width: '18rem' }}>
       <Card.Body className='pb-5'>
         {/* <Card.Title>Card Title</Card.Title> */}
         <Card.Subtitle className="mb-2 d-flex text-muted mt-3">
