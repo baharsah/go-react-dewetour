@@ -6,7 +6,7 @@ type TripRequest struct {
 	CountryID       int    `form:"country_id"`
 	Accomodation    string `form:"accomodation"`
 	DateTrip        string `form:"date_trip"`
-	Transportation  string `json:"transportation"`
+	Transportation  string `form:"transportation"`
 	Eatenary        string `form:"eatenary"`
 	// bagian ini akan dirubah menjadi sebuah tanggal yang di-"moment"-kan untuk menghitung jarak
 	Day         int    `form:"day"`

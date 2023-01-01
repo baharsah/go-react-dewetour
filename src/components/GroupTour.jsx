@@ -53,7 +53,7 @@ function GroupTour() {
     }
   }
 
-  let {data : trips , status} = useQuery("tripsCache"  , async () => {
+  let {data : trips , status , refetch : refetchtrip} = useQuery("tripsCache"  , async () => {
 
 
     const response =  await API.get("/trips")
@@ -93,7 +93,7 @@ function GroupTour() {
     
     console.log("cacad")
 
-    if (event.target.name === 'file') {
+    if (event.target.name === 'images') {
       setDataTrip({...dataTrip, [event.target.name]: event.target.files});
     }else{
       setDataTrip({...dataTrip, [event.target.name]: event.target.value});
@@ -105,9 +105,43 @@ function GroupTour() {
     evt.preventDefault();
     console.log("halo")
       console.log("halo " , dataTrip)
-    // const formData = new FormData();
+    //  const formData = new FormData();
+    //  formData.append(dataTrip);
+    //  console.log("formData " , formData)
     // kirim data disini dengan multipart form file
+
+
+const formData = new FormData();
+
+for (let i = 0; i < dataTrip['images'].length; i++) {
+  formData.append('images', dataTrip['images'][i]);
+}
+
+
+for (let key in dataTrip) {
+
+
+    if(key !== 'images'){
+
+  formData.append(key, dataTrip[key]);
+
+  
+}
+
+
+}
+
+
+    API.post('trip' , formData  , 
+    {
+      headers: {'Content-Type': 'multipart/form-data'}
+    }
     
+    )
+
+    handleAddTripClose() 
+    refetchtrip()
+
         
   }
 
@@ -150,11 +184,11 @@ function GroupTour() {
           {/* <img src={'https://3.bp.blogspot.com/-WqX6Ng-AgmE/XWcsn3C5HaI/AAAAAAAADeE/qY_OeWR2zf0N0o7TVOI0Sx8v60ohQP1NgCLcBGAs/s1600/1567036546540.jpg'} alt="" /> */}
         <Form.Group className="mb-3">
           <Form.Label htmlFor="disabledTextInput">Trip Name</Form.Label>
-          <Form.Control name='trip' onChange={onSetData} id="disabledTextInput" placeholder="" />
+          <Form.Control name='title' onChange={onSetData} id="disabledTextInput" placeholder="" />
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label htmlFor="disabledSelect">Country</Form.Label>
-          <Form.Select id="disabledSelect" onChange={onSetData} name='Country'>
+          <Form.Select id="disabledSelect" onChange={onSetData} name='country_id'>
             
             { kountries?.map((a) => <option value={a.IDCountries}>{a.Country}</option>  )}
             {/* <option>Disabled select</option> */}
@@ -162,12 +196,16 @@ function GroupTour() {
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label htmlFor="disabledTextInput">Accomodation</Form.Label>
-          <Form.Control id="disabledTextInput" name="accomodation" placeholder="" />
+          <Form.Control id="disabledTextInput" onChange={onSetData} name="accomodation" placeholder="" />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="disabledTextInput">Destination name</Form.Label>
+          <Form.Control id="disabledTextInput" onChange={onSetData} name="destination_name" placeholder="" />
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label htmlFor="disabledTextInput">Transportation</Form.Label>
 
-          <Form.Control id="disabledTextInput" name="transportation" placeholder="" />
+          <Form.Control id="disabledTextInput" name="transportation" onChange={onSetData} placeholder="" />
         </Form.Group>
 
           <Form.Group className="mb-3">
@@ -188,7 +226,7 @@ function GroupTour() {
         <Form.Group className="mb-3">
           <Form.Label htmlFor="disabledTextInput">Date Trip</Form.Label>
 
-          <Form.Control id="disabledTextInput" type='datetime-local' onChange={onSetData} name='datetrip' placeholder="" />
+          <Form.Control id="disabledTextInput" type='datetime-local' onChange={onSetData} name='date_trip' placeholder="" />
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label htmlFor="disabledTextInput" >Price</Form.Label>
@@ -198,7 +236,7 @@ function GroupTour() {
         <Form.Group className="mb-3">
           <Form.Label htmlFor="disabledTextInput" >Quota</Form.Label>
 
-          <Form.Control id="disabledTextInput" type='number' name='quota' onChange={onSetData} placeholder="" />
+          <Form.Control id="disabledTextInput" type='number' name='qty' onChange={onSetData} placeholder="" />
         </Form.Group>
         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
         <Form.Label>Description</Form.Label>
@@ -206,7 +244,7 @@ function GroupTour() {
       </Form.Group>
       <Form.Group controlId="formFile" className="mb-3">
         <Form.Label>Images</Form.Label>
-        <Form.Control type="file" name='file' onChange={onSetData} multiple />
+        <Form.Control type="file" name='images' onChange={onSetData} multiple />
 
       </Form.Group>
       <Form.Group className="mb-3">
@@ -278,7 +316,7 @@ function GroupTour() {
       {
            trips?.map((a , b) => {
             return (
-      <CardGroupTour data={a} countries={kountries} images={a.ImageTrips} image={a.ImageTrips[0].URL} slot={`0/${a.Quantity}`} id={a.ID} price={c(a.Price)} dest={a.destinationName} desc={a.Title}></CardGroupTour>
+      <CardGroupTour data={a} countries={kountries} images={a.ImageTrips} image={  a.ImageTrips[0].URL} slot={`0/${a.Quantity}`} id={a.ID} price={c(a.Price)} dest={a.destinationName} desc={a.Title}></CardGroupTour>
             )
        })
       }

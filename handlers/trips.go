@@ -77,7 +77,7 @@ func (h *tripRepoHandler) SetTrip(res http.ResponseWriter, req *http.Request) {
 
 	// konversi tanggal dan momen dalam form
 
-	t, err := time.Parse("2006-01-02T15:04:05", request.DateTrip)
+	t, err := time.Parse("2006-01-02T15:04", request.DateTrip)
 	// t, _ := time.Parse("2006-01-02T15:04:05", "2009-01-02T01:00:00")
 	dayTime := day * 24
 	nightTime := night * 12
