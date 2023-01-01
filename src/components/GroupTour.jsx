@@ -10,6 +10,7 @@ import {API} from "../config/api"
 import { useQuery} from 'react-query'
 import {Button , Modal , InputGroup , Form , Container , Row , Col} from 'react-bootstrap'
 import { UserContext } from './context/userProvider';
+import Draggable from "react-draggable";
 
 
 function GroupTour() {
@@ -73,6 +74,14 @@ function GroupTour() {
   const handleCountryClose = () => { setCountryShow(false); resetCtryStatus() }
   const handleCountryShow = () => setCountryShow(true);
 
+  const [showAddTrip, setShowAddTrip] = useState(false);
+
+  const handleAddTripClose = () => { setShowAddTrip(false) }
+  const handleAddTripOpen = () => setShowAddTrip(true);
+
+  const [fs , hfs] = useState(true)
+  var handlefs = () => { handleAddTripClose() ;  hfs(!fs) ; handleAddTripOpen()}
+
   
   // console.log(trips)
   if (status === 'success') {
@@ -98,7 +107,96 @@ function GroupTour() {
 
     
 
-    <h1 className={'text-center mt-5 mb-5'}>Group Tour {(state?.user.is_admin == 1 ) &&<><Button className="m-1" style={ {align : 'center' }}>Add Trip</Button><Button onClick={setCountryShow} style={ {align : 'center' }}>Country Editor</Button></> }</h1>
+    <h1 className={'text-center mt-5 mb-5'}>Group Tour {(state?.user.is_admin == 1 ) &&<><Button onClick={handleAddTripOpen} className="m-1" style={ {align : 'center' }}>Add Trip</Button><Button onClick={setCountryShow} style={ {align : 'center' }}>Country Editor</Button></> }</h1>
+    {/* Trip Modal  */}
+    <Draggable>
+
+    <Form>
+    <Modal fullscreen={fs} show={showAddTrip} onHide={handleAddTripClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add Trip</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {/* <img src={'https://3.bp.blogspot.com/-WqX6Ng-AgmE/XWcsn3C5HaI/AAAAAAAADeE/qY_OeWR2zf0N0o7TVOI0Sx8v60ohQP1NgCLcBGAs/s1600/1567036546540.jpg'} alt="" /> */}
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="disabledTextInput">Trip Name</Form.Label>
+          <Form.Control id="disabledTextInput" placeholder="" />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="disabledSelect">Country</Form.Label>
+          <Form.Select id="disabledSelect">
+            
+            { kountries?.map((a) => <option value={a.IDCountries}>{a.Country}</option>  )}
+            {/* <option>Disabled select</option> */}
+          </Form.Select>
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="disabledTextInput">Accomodation</Form.Label>
+          <Form.Control id="disabledTextInput" placeholder="" />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="disabledTextInput">Transportation</Form.Label>
+
+          <Form.Control id="disabledTextInput" placeholder="" />
+        </Form.Group>
+
+          <Form.Group className="mb-3">
+          <Form.Label htmlFor="disabledTextInput">Eat</Form.Label>
+          <Form.Control id="disabledTextInput" placeholder="" />
+        </Form.Group>
+
+          <Form.Group className="mb-3">
+          <Form.Label htmlFor="disabledTextInput" className="fw-bold fs-3">Duration</Form.Label>
+          <br/>
+          <Form.Label htmlFor="disabledTextInput">Start Date</Form.Label>
+
+          <Form.Control id="disabledTextInput" placeholder="" />
+          <Form.Label htmlFor="disabledTextInput">End Date</Form.Label>
+
+          <Form.Control id="disabledTextInput" placeholder="" />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="disabledTextInput">Date Trip</Form.Label>
+
+          <Form.Control id="disabledTextInput" type='datetime-local' placeholder="" />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="disabledTextInput">Price</Form.Label>
+
+          <Form.Control id="disabledTextInput" placeholder="" />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="disabledTextInput">Quota</Form.Label>
+
+          <Form.Control id="disabledTextInput" placeholder="" />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+        <Form.Label>Description</Form.Label>
+        <Form.Control as="textarea" rows={3} />
+      </Form.Group>
+      <Form.Group controlId="formFile" className="mb-3">
+        <Form.Label>Images</Form.Label>
+        <Form.Control type="file" />
+        <Form.Control type="file" />
+        <Form.Control type="file" />
+      </Form.Group>
+        {/* <Button type="submit">Submit</Button> */}
+    {/* </Form> */}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleAddTripClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleAddTripClose}>
+            Save Changes
+          </Button>
+          <Button variant="warning" onClick={handlefs}>
+            Togel Fullskren
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      </Form>
+      </Draggable>
     {/* Country Editor  */}
 
     <Modal show={showCountry} onHide={handleCountryClose}>
@@ -139,7 +237,7 @@ function GroupTour() {
           </Button>
           <Button variant="primary" onClick={handleCountryClose}>
             Save Changes
-          </Button>
+          </Button>         
         </Modal.Footer>
       </Modal>
     <div className='d-flex ms-5 me-5 flex-wrap justify-content-around'>
