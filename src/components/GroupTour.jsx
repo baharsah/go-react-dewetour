@@ -38,7 +38,7 @@ function GroupTour() {
       Country : country
     })
 
-    console.log("helo" , response) 
+    // console.log("helo" , response) 
 
       if (response.status == 200){
         setCtryUpdateStatus(true)
@@ -74,6 +74,8 @@ function GroupTour() {
   const handleCountryClose = () => { setCountryShow(false); resetCtryStatus() }
   const handleCountryShow = () => setCountryShow(true);
 
+  // trip area 
+
   const [showAddTrip, setShowAddTrip] = useState(false);
 
   const handleAddTripClose = () => { setShowAddTrip(false) }
@@ -81,6 +83,33 @@ function GroupTour() {
 
   const [fs , hfs] = useState(true)
   var handlefs = () => { handleAddTripClose() ;  hfs(!fs) ; handleAddTripOpen()}
+
+  var [dataTrip , setDataTrip] = useState({})
+
+  // submitting data 
+
+  var onSetData = (event) => { 
+
+    
+    console.log("cacad")
+
+    if (event.target.name === 'file') {
+      setDataTrip({...dataTrip, [event.target.name]: event.target.files});
+    }else{
+      setDataTrip({...dataTrip, [event.target.name]: event.target.value});
+
+    }
+  }
+
+  var onSubmitData = (evt) => {
+    evt.preventDefault();
+    console.log("halo")
+      console.log("halo " , dataTrip)
+    // const formData = new FormData();
+    // kirim data disini dengan multipart form file
+    
+        
+  }
 
   
   // console.log(trips)
@@ -109,22 +138,23 @@ function GroupTour() {
 
     <h1 className={'text-center mt-5 mb-5'}>Group Tour {(state?.user.is_admin == 1 ) &&<><Button onClick={handleAddTripOpen} className="m-1" style={ {align : 'center' }}>Add Trip</Button><Button onClick={setCountryShow} style={ {align : 'center' }}>Country Editor</Button></> }</h1>
     {/* Trip Modal  */}
-    <Draggable>
+    
 
-    <Form>
     <Modal fullscreen={fs} show={showAddTrip} onHide={handleAddTripClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add Trip</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+      <form onSubmit={onSubmitData}>
+
           {/* <img src={'https://3.bp.blogspot.com/-WqX6Ng-AgmE/XWcsn3C5HaI/AAAAAAAADeE/qY_OeWR2zf0N0o7TVOI0Sx8v60ohQP1NgCLcBGAs/s1600/1567036546540.jpg'} alt="" /> */}
         <Form.Group className="mb-3">
           <Form.Label htmlFor="disabledTextInput">Trip Name</Form.Label>
-          <Form.Control id="disabledTextInput" placeholder="" />
+          <Form.Control name='trip' onChange={onSetData} id="disabledTextInput" placeholder="" />
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label htmlFor="disabledSelect">Country</Form.Label>
-          <Form.Select id="disabledSelect">
+          <Form.Select id="disabledSelect" onChange={onSetData} name='Country'>
             
             { kountries?.map((a) => <option value={a.IDCountries}>{a.Country}</option>  )}
             {/* <option>Disabled select</option> */}
@@ -132,54 +162,60 @@ function GroupTour() {
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label htmlFor="disabledTextInput">Accomodation</Form.Label>
-          <Form.Control id="disabledTextInput" placeholder="" />
+          <Form.Control id="disabledTextInput" name="accomodation" placeholder="" />
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label htmlFor="disabledTextInput">Transportation</Form.Label>
 
-          <Form.Control id="disabledTextInput" placeholder="" />
+          <Form.Control id="disabledTextInput" name="transportation" placeholder="" />
         </Form.Group>
 
           <Form.Group className="mb-3">
           <Form.Label htmlFor="disabledTextInput">Eat</Form.Label>
-          <Form.Control id="disabledTextInput" placeholder="" />
+          <Form.Control id="disabledTextInput" onChange={onSetData} name="eat" placeholder="" />
         </Form.Group>
 
           <Form.Group className="mb-3">
           <Form.Label htmlFor="disabledTextInput" className="fw-bold fs-3">Duration</Form.Label>
           <br/>
-          <Form.Label htmlFor="disabledTextInput">Start Date</Form.Label>
+          <Form.Label >Day</Form.Label>
 
-          <Form.Control id="disabledTextInput" placeholder="" />
-          <Form.Label htmlFor="disabledTextInput">End Date</Form.Label>
+          <Form.Control id="disabledTextInput" type='number' htmlFor="disabledTextInput" onChange={onSetData} name="day" placeholder="" />
+          <Form.Label htmlFor="disabledTextInput">Night</Form.Label>
 
-          <Form.Control id="disabledTextInput" placeholder="" />
+          <Form.Control id="disabledTextInput"  type='number' onChange={onSetData} name='night' placeholder="" />
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label htmlFor="disabledTextInput">Date Trip</Form.Label>
 
-          <Form.Control id="disabledTextInput" type='datetime-local' placeholder="" />
+          <Form.Control id="disabledTextInput" type='datetime-local' onChange={onSetData} name='datetrip' placeholder="" />
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label htmlFor="disabledTextInput">Price</Form.Label>
+          <Form.Label htmlFor="disabledTextInput" >Price</Form.Label>
 
-          <Form.Control id="disabledTextInput" placeholder="" />
+          <Form.Control id="disabledTextInput" type='number' name='price' onChange={onSetData} placeholder="" />
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label htmlFor="disabledTextInput">Quota</Form.Label>
+          <Form.Label htmlFor="disabledTextInput" >Quota</Form.Label>
 
-          <Form.Control id="disabledTextInput" placeholder="" />
+          <Form.Control id="disabledTextInput" type='number' name='quota' onChange={onSetData} placeholder="" />
         </Form.Group>
         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
         <Form.Label>Description</Form.Label>
-        <Form.Control as="textarea" rows={3} />
+        <Form.Control name='description' onChange={onSetData} as="textarea" rows={3} />
       </Form.Group>
       <Form.Group controlId="formFile" className="mb-3">
         <Form.Label>Images</Form.Label>
-        <Form.Control type="file" />
-        <Form.Control type="file" />
-        <Form.Control type="file" />
+        <Form.Control type="file" name='file' onChange={onSetData} multiple />
+
       </Form.Group>
+      <Form.Group className="mb-3">
+      <Button variant="primary" type='submit'>
+            Save Changes
+          </Button>
+      </Form.Group>
+      </form>
+
         {/* <Button type="submit">Submit</Button> */}
     {/* </Form> */}
         </Modal.Body>
@@ -187,16 +223,12 @@ function GroupTour() {
           <Button variant="secondary" onClick={handleAddTripClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleAddTripClose}>
-            Save Changes
-          </Button>
           <Button variant="warning" onClick={handlefs}>
             Togel Fullskren
           </Button>
         </Modal.Footer>
       </Modal>
-      </Form>
-      </Draggable>
+      
     {/* Country Editor  */}
 
     <Modal show={showCountry} onHide={handleCountryClose}>
