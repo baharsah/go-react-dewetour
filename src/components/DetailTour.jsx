@@ -65,6 +65,7 @@ const diffTime = Math.abs(to - from);
 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 const diffNights = diffDays - 1;
 
+document.body.scrollTop = 0;
 
 //  const  [data , modData]  = useState(DataDetail)
  var [counter , setCounter] = useState(1)
@@ -98,7 +99,7 @@ const diffNights = diffDays - 1;
   <Container className='mt-5 pt-5 ms-5 ps-5'>
   {/* Whitespaces */}
 </Container>
-  <h1 >Loading...</h1>
+  <img style={ {margin : 300} }  className="scale-up-center"src="https://3.bp.blogspot.com/-WqX6Ng-AgmE/XWcsn3C5HaI/AAAAAAAADeE/qY_OeWR2zf0N0o7TVOI0Sx8v60ohQP1NgCLcBGAs/s1600/1567036546540.jpg" alt="" srcset="" />
   </>)
  }else{
 

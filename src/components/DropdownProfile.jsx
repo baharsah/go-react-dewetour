@@ -130,6 +130,8 @@ const DropdownProfile = (props) => {
                     dispatch({
                         type : "LOGOUT" 
                     })
+                    // logout state 
+                    props.sig(null)
                   navigate("/");
                 }}
               >

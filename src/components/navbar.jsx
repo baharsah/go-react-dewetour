@@ -208,7 +208,7 @@ return  <Navbar className='fixed-top' variant="dark" style={ { backgroundRepeat:
     <Button className="fw-bold pt-2 pb-2 ps-2 pe-2" onClick={handleShowSignup} variant="outline-warning">Signup</Button>
   </div> }
 
-   { (state.isLogin == true) &&<DropdownProfile profile={state.user}>
+   { (state.isLogin == true) &&<DropdownProfile sig={setSigninData} profile={state.user}>
     <div className="rounded-circle border border-warning" >
         <img src={Profile} className="rounded-circle" width="50px" height="50px" />
       </div>
