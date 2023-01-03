@@ -58,6 +58,7 @@ func (h *tripRepoHandler) SetTrip(res http.ResponseWriter, req *http.Request) {
 	qty, _ := strconv.Atoi(req.FormValue("qty"))
 	day, _ := strconv.Atoi(req.FormValue("day"))
 	night, _ := strconv.Atoi(req.FormValue("night"))
+	price, _ := strconv.Atoi(req.FormValue("price"))
 
 	request := tripdito.TripRequest{
 		DestinationName: req.FormValue("destination_name"),
@@ -71,14 +72,18 @@ func (h *tripRepoHandler) SetTrip(res http.ResponseWriter, req *http.Request) {
 		Quota:           uint(qty),
 		Description:     req.FormValue("description"),
 		DateTrip:        req.FormValue("date_trip"),
+		Price:           price,
 	}
 
 	// konversi tanggal dan momen dalam form
 
-	t, err := time.Parse("2006-01-02T15:04:05", request.DateTrip)
+	t, err := time.Parse("2006-01-02T15:04", request.DateTrip)
+	// t, _ := time.Parse("2006-01-02T15:04:05", "2009-01-02T01:00:00")
 	dayTime := day * 24
 	nightTime := night * 12
-	toDateParse := t.Add(time.Duration(dayTime) + time.Duration(nightTime))
+	toDateParse := t.Add((time.Hour * time.Duration(dayTime)) + (time.Hour * time.Duration(nightTime)))
+	log.Println("Disini COK!")
+	log.Println("dari ", t, " ke ", toDateParse)
 
 	// ambil meta gambar kedalam database
 
@@ -104,6 +109,7 @@ func (h *tripRepoHandler) SetTrip(res http.ResponseWriter, req *http.Request) {
 		Description:     request.Description,
 		Quantity:        uint(qty),
 		ImageTrips:      ref,
+		Price:           uint(request.Price),
 	}
 
 	logrus.Println("ini hasil jadi", trip)
@@ -144,6 +150,25 @@ func (h *tripRepoHandler) DeleteTrip(res http.ResponseWriter, req *http.Request)
 		return
 	}
 
+	res.WriteHeader(http.StatusOK)
+	response := resultDito.SuccessResult{Code: http.StatusOK, Data: data}
+	json.NewEncoder(res).Encode(response)
+
+}
+
+func (h *tripRepoHandler) GetTrip(res http.ResponseWriter, req *http.Request) {
+	res.Header().Set("Content-Type", "application/json")
+
+	idint, _ := strconv.Atoi(mux.Vars(req)["id"])
+	log.Println("Test", idint)
+	data, err := h.TripRepo.GetTrip(idint)
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		response := resultDito.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
+		json.NewEncoder(res).Encode(response)
+		return
+
+	}
 	res.WriteHeader(http.StatusOK)
 	response := resultDito.SuccessResult{Code: http.StatusOK, Data: data}
 	json.NewEncoder(res).Encode(response)

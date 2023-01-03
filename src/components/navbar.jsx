@@ -5,7 +5,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Button from 'react-bootstrap/Button';
 import NavbarBG from '../assets/e.png';
 import Icn from '../assets/Icon.png';
-import React, { useState , useEffect } from 'react';
+import React, { useState , useEffect , useContext } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
@@ -13,33 +13,21 @@ import Profile from '../assets/bs/profile.png'
 import { Dropdown , Alert } from 'react-bootstrap';
 import { BsFillCaretUpFill as CaretUp } from "react-icons/bs";
 import { registerUser , checkUser, checkAuth, isAdmin} from '../modules/axios';
+import { useMutation } from 'react-query';
+
+import { API } from '../config/api';
+import { UserContext } from './context/userProvider';
+import DropdownProfile from './DropdownProfile';
 
 
 const CustomNavbar = 
 () => {
 
+  const [state , dispatch] = useContext(UserContext)
+
+  // navigation helper
+
   const nav = useNavigate()
-
-  //useEffect for localstorage
-  var [statusLogin , updatestatusLogin] = useState()
-  var [statusAdmin , updatestatusAdmin] = useState()
-
-
-  var destroySession = () => {
-    localStorage.removeItem("isLogin")
-    localStorage.removeItem("isAdmin")
-    localStorage.removeItem("user")
-    updatestatusAdmin(null)
-    updatestatusLogin(null)
-    console.log(statusLogin)
-  }
-  useEffect(() => {
-
-    updatestatusLogin(localStorage.getItem("isLogin"))
-    updatestatusAdmin(localStorage.getItem("isAdmin"))
-
-
-  } , [])
 
   //switchto
 
@@ -53,21 +41,8 @@ const CustomNavbar =
 
   }
 
-  // Register Status
-
-  const [emailStatusAvail , setEmailStatusAvail] = useState(null)
-  const [registerSuccess , setRegisterSuccess] = useState(null)
-  // const [hidingRegisterModal , setHidingRegisterModal] = useState(null)
-
-  //end
-  const [isOpen, usetIsOpen] = useState(false);
-
-  const setIsOpen = () => {
-    usetIsOpen(true)
-    setTimeout(() => {
-      usetIsOpen(false)
-    },9000)
-  }
+var [message , setMessage] = useState(null)
+var [profile , updateProfile] = useState(null)
 
   // const nav = useNavigate()
   const [showSignin, setShowSignin] = useState(false);
@@ -80,7 +55,6 @@ const CustomNavbar =
 
 
 const [signinData , setSigninData] = useState(); 
-const [loginSuccess , setLoginSuccess] = useState(false)
 
 const updateSigninData = e => {
   // e.preventDefault()
@@ -89,35 +63,63 @@ const updateSigninData = e => {
 })
 }
 
-const submitSigninData = e => {
-  e.preventDefault()
-  // console.log(data)
- checkUser(signinData.email).then((r) => {
-    if (r.data.length > 0){
-      checkAuth(signinData.email , signinData.pass).then((r) => {
-        if(r.data.length > 0 ){
-          // console.log(isAdmin(r.data.email) + "adalah admin")
 
-          setLoginSuccess(true)
-          localStorage.setItem('isLogin' , true)
-    localStorage.setItem("user" , r.data.email)
-          setTimeout(() => {
-            setLoginSuccess(false)
-          handleCloseSignin()
-            updatestatusLogin("true")
-        } , 2000
-          )
-          isAdmin(r.data.email).then((r) => {
-            if(r.data.length > 0){updatestatusAdmin(true) ;localStorage.setItem("isAdmin" , true)}
-          })  
-        }
+console.log(state.user)
+
+const submitSigninData = useMutation(async (e) => {
+  e.preventDefault();
+  try {
+
+    // Configuration Content-type
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+      },
+    };
+
+    // Data body
+    const body = JSON.stringify(signinData);
+
+    // Insert data user to database
+    const response = await API.post('/login', body, config);
+
+    if (response?.status === 200) {
+
+      dispatch({
+        type : "LOGIN_SUCCESS" , 
+        payload : response.data.data
       })
-    }else{
-      alert("Auth Failed")
-    }
-  })
 
-}
+      updateProfile(response.data.data)
+      setShowSignin(false)
+
+      console.log(state.user.is_admin)
+
+      
+
+      if(response.data.data.is_admin === 1) {
+
+        // aksi render dropdown untuk admin disini 
+      
+      }else{
+
+        // aksi render dropdown untuk user disini 
+
+      }
+
+    }
+
+    // Handling response here
+  } catch (error) {
+    const alert = (
+      <Alert variant="danger" className="py-1">
+        response.data.message
+      </Alert>
+    );
+    setMessage(alert);
+    console.log(error);
+  }
+})
 
 const [signupData , setSignupData] = useState(); 
 
@@ -130,30 +132,58 @@ const updateSignupData = e => {
 })
 }
 
-const submitSignupData = e => {
-  e.preventDefault()
-   console.log('registerEvent')
+const submitSignupData = useMutation(async (e)  => {
+  try {
+    e.preventDefault();
 
-   checkUser(signupData.email).then((response) => {
+    // Configuration Content-type
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+      },
+    };
 
-    if(response.data.length > 0){
-      setEmailStatusAvail(true)
-    }else{
-      setRegisterSuccess(true)
-      registerUser(signupData)
-      setEmailStatusAvail(false)
-      setTimeout(() => {
-        setShowSignup(false)
-        setShowSignin(true)
-        setRegisterSuccess(false)
-        setEmailStatusAvail(false)
-      } ,2000)
-      
+    // Data body
+    const body = JSON.stringify(signupData);
+
+    // Insert data user to database
+    const response = await API.post('/register', body, config);
+
+    // Notification
+    if (response.status == 200) {
+      const alert = (
+        <Alert variant="success" className="py-1">
+          Success
+        </Alert>
+      );
+
+      setMessage(alert)
+      await setTimeout(() => {
+
+      } , 1000)
+     setMessage(null)
+        console.log("Switcher must be there")
+
+    } else {
+      const alert = (
+        <Alert variant="danger" className="py-1">
+          {response.data.message}
+        </Alert>
+      );
+      setMessage(alert);
     }
-   } )
-  // registerUser(signupData)
+  } catch (error) {
+    const alert = (
+      <Alert variant="danger" className="py-1">
+        <h1>Pendaftaran gagal</h1>
+        
+      </Alert>
+    );
+    setMessage(alert);
+    console.log(error);
+  }
 
-}
+})
 
 // console.log(e)
 
@@ -170,48 +200,28 @@ return  <Navbar className='fixed-top' variant="dark" style={ { backgroundRepeat:
   <Navbar.Toggle aria-controls="basic-navbar-nav" />
   <Navbar.Collapse id="basic-navbar-nav">
     <Nav className="me-auto">
-      {/* <Nav.Link href="#home">Home</Nav.Link>
-      <Nav.Link href="#link">Link</Nav.Link> */}
-      {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-        <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-        <NavDropdown.Item href="#action/3.2">
-          Another action
-        </NavDropdown.Item>
-        <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-        <NavDropdown.Divider />
-        <NavDropdown.Item href="#action/3.4">
-          Separated link
-        </NavDropdown.Item>
-      </NavDropdown> */}
     </Nav>
-    {(statusLogin != "true") &&
-    <>
+  
+  
+  {  (state.isLogin == false ) &&<div>
     <Button variant="warning" onClick={handleShowSignin} className="me-3 fw-bold pt-2 pb-2 ps-2 pe-2">Login</Button>
     <Button className="fw-bold pt-2 pb-2 ps-2 pe-2" onClick={handleShowSignup} variant="outline-warning">Signup</Button>
-    </>
+  </div> }
+
+   { (state.isLogin == true) &&<DropdownProfile sig={setSigninData} profile={state.user}>
+    <div className="rounded-circle border border-warning" >
+        <img src={Profile} className="rounded-circle" width="50px" height="50px" />
+      </div>
+    </DropdownProfile>
 }
-     { (statusLogin != null) &&<>
-    <Dropdown>
-    <Button onClick={() => setIsOpen(!isOpen) } variant="warning" className="rounded-circle p-1 fw-bold"> <img className='rounded-circle' src={Profile} width="50" height='50' alt="" srcset="" /> </Button>
-    
-    <Dropdown.Menu className={'mt-3'} show={isOpen}>
-      <div style={{position : 'absolute' , transform : 'translateY(-25px)'  }}><CaretUp  style={{ color : "white" ,  width : 30 , height : 30}}></CaretUp></div>
-      { (isAdmin != null) && <><Dropdown.Item eventKey="2" onClick={() => {
-          nav('trx')
-      }}>Trip</Dropdown.Item>
-      <Dropdown.Item onClick={destroySession}>Logout</Dropdown.Item></> }
-      { !isAdmin && <><Dropdown.Item eventKey="2" onClick={() => {
-          nav('profile')
-      } }>Profile</Dropdown.Item><Dropdown.Item eventKey="2">Pay</Dropdown.Item>
-      <Dropdown.Item onClick={destroySession}>Logout</Dropdown.Item></> }
-    </Dropdown.Menu>
-    </Dropdown>
-    </>
-}
-    {/* {isOpen && <div style={{backgroundColor : 'white'}}> DropDown Here </div>} */}
+  
+  
         
   </Navbar.Collapse>
 </Container>
+
+
+
 {/* area modal */}
 
 
@@ -220,13 +230,8 @@ return  <Navbar className='fixed-top' variant="dark" style={ { backgroundRepeat:
    
 
         <Modal.Body>
-          <form onSubmit={submitSigninData} method="post">
-          <Alert show={loginSuccess} variant="success">
-      <Alert.Heading>Mantap jiwa!</Alert.Heading>
-      <p>
-        dah bisa login gak, tuh.
-      </p>
-    </Alert>
+          {message}
+          <form onSubmit={(e) => submitSigninData.mutate(e)} method="post">
           <Form.Group  className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Email address</Form.Label>
               <Form.Control
@@ -242,7 +247,7 @@ return  <Navbar className='fixed-top' variant="dark" style={ { backgroundRepeat:
               <Form.Control
                 type="password"
                 placeholder="password"
-                name='pass' 
+                name='password' 
                 onChange={updateSigninData}
                 className=''
               />
@@ -251,7 +256,7 @@ return  <Navbar className='fixed-top' variant="dark" style={ { backgroundRepeat:
             <Button variant="warning" type="submit" className=" fw-bold pt-2 pb-2 ps-2 pe-2 text-white">Signin</Button>
             </div>
           </form>
-        <h3>Kamu belum daftar? <a onClick={switchToRegister}>Klik sini dong!</a></h3>
+        <p>Kamu belum daftar? <a onClick={switchToRegister}>Klik sini dong!</a></p>
 
         </Modal.Body>
 
@@ -261,31 +266,14 @@ return  <Navbar className='fixed-top' variant="dark" style={ { backgroundRepeat:
           <Modal.Title>Register</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        <form onSubmit={submitSignupData}>
-        <Alert show={registerSuccess} variant="success">
-      <Alert.Heading>Mantap jiwa!</Alert.Heading>
-      <p>
-register gak, tuh.
-      </p>
-    </Alert>
-    <Alert variant="warning" show={false}>
-      <Alert.Heading>Kayaknya ada yang salah, deh.</Alert.Heading>
-      <p>
-      tapi apa, ya? kayaknya dari kita, deh.
-      </p>
-    </Alert>
-    <Alert variant="warning" show={emailStatusAvail}>
-      <Alert.Heading>Email kamu udah kepake, nih.</Alert.Heading>
-      <p>
-      coba pake email lain ya, gais.
-      </p>
-    </Alert>
+          {message}
+        <form onSubmit={(e) => submitSignupData.mutate(e)}>
         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Full Name</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="e.g. Asep Knalpot"
-                name='nama' 
+                name='name' 
                 className=''
                 onChange={updateSignupData}
               />
@@ -305,7 +293,7 @@ register gak, tuh.
               <Form.Control
                 type="password"
                 placeholder="password"
-                name='pass' 
+                name='password' 
                 onChange={updateSignupData}
 
                 className=''
@@ -335,7 +323,7 @@ register gak, tuh.
             <Button variant="warning" type='submit' className=" fw-bold pt-2 pb-2 ps-2 pe-2 text-white">Signup</Button>
             </div>
           </form>
-        <h3>Kamu udah daftar? <a onClick={switchToLogin}>Klik sini dong!</a></h3>
+        <p>Kamu udah daftar? <a onClick={switchToLogin}>Klik sini dong!</a></p>
 
         </Modal.Body>
       </Modal>

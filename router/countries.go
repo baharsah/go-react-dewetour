@@ -15,7 +15,7 @@ func CtryRouter(r *mux.Router) {
 	h := handlers.HandlerCountry(ctryRepo)
 
 	r.HandleFunc("/country", middleware.Auth(h.SetCountry)).Methods(http.MethodPost)
-	r.HandleFunc("/country", middleware.Auth(h.GetCountries)).Methods(http.MethodGet)
+	r.HandleFunc("/country", h.GetCountries).Methods(http.MethodGet)
 	r.HandleFunc("/country/{id}", middleware.Auth(h.GetCountry)).Methods(http.MethodGet)
 	r.HandleFunc("/country/{id}", middleware.Auth(h.DeleteCountry)).Methods(http.MethodDelete)
 	r.HandleFunc("/country/{id}", middleware.Auth(h.UpdateCountry)).Methods(http.MethodPatch)

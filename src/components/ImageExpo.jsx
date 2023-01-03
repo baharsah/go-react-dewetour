@@ -21,11 +21,19 @@ const ImageExpo = (props) => {
     </Row>
     <Row className="">
       <Col className='col-md-auto'>
-      <img src={Img1} alt="" />
+      <img height={500} width={900} src={props.images[0].URL} alt="" />
       </Col>
     </Row>
     <Row className='mt-3'>
-    <Col className='col-md-auto'>
+      {props.images.map((a , b) => {
+        return (
+                  <Col className='col-lg-2'>
+                    <img height={200} width={200} src={a.URL} alt="" />
+                  </Col>
+                )
+
+      }) }
+    {/* <Col className='col-md-auto'>
       <img src={Img2} alt=""/>
       </Col>
       <Col className='col-md-auto'>
@@ -33,7 +41,7 @@ const ImageExpo = (props) => {
       </Col>        
       <Col className='col-md-auto'>
       <img  src={Img4} alt="" />
-      </Col>
+      </Col> */}
     </Row>
   </Container>
   )

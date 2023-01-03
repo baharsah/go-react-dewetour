@@ -3,6 +3,7 @@ package router
 import (
 	"baharsah/handlers"
 	"baharsah/helper/mysql"
+	"baharsah/middleware"
 	"baharsah/repo"
 	"net/http"
 
@@ -18,5 +19,6 @@ func UserRoute(r *mux.Router) {
 	r.HandleFunc("/login", h.AuthUser).Methods(http.MethodPost)
 
 	r.HandleFunc("/register", h.CreateUser).Methods(http.MethodPost)
+	r.HandleFunc("/check-auth", middleware.Auth(h.CheckAuth)).Methods(http.MethodGet)
 
 }

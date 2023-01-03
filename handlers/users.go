@@ -59,8 +59,10 @@ func (h *userRepoHandler) CreateUser(res http.ResponseWriter, req *http.Request)
 	}
 
 	validation := validator.New()
-	validation.RegisterValidation("email_exist", userValdilator.IsSameAsExistEmail)
+	validation.RegisterValidation("emailExist", userValdilator.IsSameAsExistEmail)
 	err := validation.Struct(request)
+
+	//validation area
 
 	if err != nil {
 
@@ -79,16 +81,18 @@ func (h *userRepoHandler) CreateUser(res http.ResponseWriter, req *http.Request)
 	}
 
 	user := models.User{
-		Name:     request.FullName,
+		Name:     request.Name,
 		Email:    request.Email,
 		Password: password,
 		Address:  request.Address,
 	}
+	log.Println(user)
 	data, err := h.UserRepo.SetUser(user)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		response := resultDito.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
 		json.NewEncoder(res).Encode(response)
+
 	}
 
 	res.WriteHeader(http.StatusOK)
@@ -183,4 +187,31 @@ func (h *userRepoHandler) GetUser(res http.ResponseWriter, req *http.Request) {
 	}
 	response := resultDito.SuccessResult{Code: http.StatusOK, Data: user}
 	json.NewEncoder(res).Encode(response)
+}
+
+func (h *userRepoHandler) CheckAuth(res http.ResponseWriter, req *http.Request) {
+	res.Header().Set("Content-Type", "application/json")
+	userInfo := req.Context().Value("userInfo").(jwt.MapClaims)
+	userID := int(userInfo["userID"].(float64))
+
+	idCollection := models.User{ID: userID}
+	user, err := h.UserRepo.GetUserID(idCollection)
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		response := resultDito.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+		json.NewEncoder(res).Encode(response)
+		return
+	}
+
+	authCheck := authDito.CheckAuthResponse{
+		Id:     user.ID,
+		Name:   user.Name,
+		Email:  user.Email,
+		Status: user.IsAdmin,
+	}
+
+	res.Header().Set("Content-Type", "application/json")
+	response := resultDito.SuccessResult{Code: http.StatusOK, Data: authCheck}
+	json.NewEncoder(res).Encode(response)
+
 }

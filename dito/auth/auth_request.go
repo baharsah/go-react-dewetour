@@ -6,9 +6,9 @@ type LoginRequest struct {
 }
 
 type RegisterRequest struct {
-	Email    string `gorm:"type : varchar(255)" json:"email" validate:"required,email_exist"`
+	Email    string `gorm:"type : varchar(255)" json:"email" validate:"emailExist" emailExist:"Email yang anda gunakan sudah terdaftar" `
 	Password string `gorm : "type : varchar(255)" json:"password" validate:"required"`
 	Address  string `gorm :"type : varchar (255)" json:"address" validate:"required"`
-	FullName string `gorm: "type: varchar(255)" json:"name" validate:"required"`
+	Name     string `gorm: "type: varchar(255)" json:"name" validate:"required"`
 	Phone    string `gorm : "type: varchar(255)" json:"phone" validate:"required"`
 }
