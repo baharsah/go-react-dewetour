@@ -6,6 +6,7 @@ type TransactionsResponse struct {
 	Status     int                  `json:"status"`
 	Attachment string               `json:"attachment"`
 	Trip       TripRelationResponse `json:"trip"`
+	MID        int                  `json: "midtrans"`
 }
 
 type TripRelationResponse struct {
@@ -21,3 +22,5 @@ type TripRelationResponse struct {
 	Quota        int    `json:"quota"`
 	Description  string `json:"description"`
 }
+
+// Adding midtrans response to Transaction Response

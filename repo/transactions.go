@@ -7,10 +7,12 @@ import (
 )
 
 type TransactionRepo interface {
+	// TODO modifikasi disini
 	GetTransactions() ([]models.Transactions, error)
 	GetTransaction(id int) (models.Transactions, error)
 	// UpdateTransaction() (models.Transactions, error)
 	SetTransaction(models.Transactions) (models.Transactions, error)
+	UpdateTransactionMidtrans(models.Transactions) error
 }
 
 func RepoTRX(db *gorm.DB) *repo {
@@ -19,6 +21,7 @@ func RepoTRX(db *gorm.DB) *repo {
 
 }
 
+// TODO modifikasi disini
 func (r *repo) GetTransactions() ([]models.Transactions, error) {
 	var trxs []models.Transactions
 
@@ -36,8 +39,30 @@ func (r *repo) GetTransaction(id int) (models.Transactions, error) {
 
 func (r *repo) SetTransaction(trx models.Transactions) (models.Transactions, error) {
 
-	err := r.db.Debug().Create(&trx).Error
+	err := r.db.Debug().Preload("User").Create(&trx).Error
 
 	return trx, err
 
+}
+
+// statuses
+// statuses
+// 1. Challenged
+// 2. success
+// 3. expired
+// 4. pending
+// 5. failure
+// 6. refunded
+
+// TODO : buat update dan get by midtrans ID
+
+func (r *repo) UpdateTransactionMidtrans(trx models.Transactions) error {
+	err := r.db.Debug().Where(models.Transactions{MidtransID: trx.MidtransID}).Updates(models.Transactions{PaymentStatus: trx.PaymentStatus}).Error
+	return err
+}
+
+func (r *repo) GetTransactionMidtrans(trx models.Transactions) (models.Transactions, error) {
+	var tx = models.Transactions{}
+	res := r.db.Debug().Preload("User", "name , email").Where(models.Transactions{MidtransID: trx.MidtransID}).First(&tx).Error
+	return tx, res
 }
