@@ -6,6 +6,7 @@ type RegisterResponse struct {
 }
 
 type LoginResponse struct {
+	Id       int    `gorm:"type: int" json:"id"`
 	Email    string `gorm:"type : varchar(255)" json:"email" validate:"required"`
 	Password string `gorm:"type : varchar(255)" json:"password" validate:"required"`
 	Token    string `gorm:"type : varchar(255)" json:"token"`

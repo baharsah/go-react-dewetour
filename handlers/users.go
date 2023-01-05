@@ -152,6 +152,7 @@ func (h *userRepoHandler) AuthUser(res http.ResponseWriter, req *http.Request) {
 	}
 
 	loginResponse := authDito.LoginResponse{
+		Id:       user.ID,
 		Email:    user.Email,
 		Password: user.Password,
 		Token:    token,
