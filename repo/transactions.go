@@ -2,6 +2,7 @@ package repo
 
 import (
 	"baharsah/models"
+	"log"
 
 	"gorm.io/gorm"
 )
@@ -39,9 +40,18 @@ func (r *repo) GetTransaction(id int) (models.Transactions, error) {
 
 func (r *repo) SetTransaction(trx models.Transactions) (models.Transactions, error) {
 
-	err := r.db.Debug().Preload("User").Create(&trx).Error
+	err := r.db.Debug().Create(&trx).Error
+	if err != nil {
+		log.Println("error creating transaction")
 
-	return trx, err
+		return trx, err
+	}
+	tx := models.Transactions{}
+
+	err2 := r.db.Debug().Preload("User").Preload("Trips").Where("midtrans_id", trx.MidtransID).Find(&tx).Error
+	log.Println("error loging transaction")
+
+	return tx, err2
 
 }
 

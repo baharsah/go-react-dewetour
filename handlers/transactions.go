@@ -6,6 +6,7 @@ import (
 	"baharsah/models"
 	"baharsah/repo"
 	"encoding/json"
+	"log"
 	"math/rand"
 	"os"
 	"strconv"
@@ -74,7 +75,7 @@ func (h *transactionRepoHandler) SetTransaction(res http.ResponseWriter, req *ht
 
 	// TODO: setup data
 
-	TransactionId := strconv.Itoa(rand.Intn(10000) - rand.Intn(100))
+	TransactionId := strconv.Itoa(rand.Intn(1000)) + "MID-" + strconv.Itoa(rand.Intn(10000)-rand.Intn(100))
 
 	trxmodel := models.Transactions{
 		UserID:        request.UserID,
@@ -83,6 +84,8 @@ func (h *transactionRepoHandler) SetTransaction(res http.ResponseWriter, req *ht
 		Quantity:      uint(request.Qty),
 		MidtransID:    TransactionId,
 	}
+
+	// log.Println("sebelum dikirim", trxmodel.MidtransID)
 
 	// bagian ini akan membuat set kedalam database
 	trx, err := h.TRXRepo.SetTransaction(trxmodel)
@@ -94,11 +97,15 @@ func (h *transactionRepoHandler) SetTransaction(res http.ResponseWriter, req *ht
 	}
 	// TODO : dapatkan metadata user
 
+	log.Println(trx)
+
+	// log.Println("Gross Amount", int64((trxmodel.Quantity)), trx.Trips.Price)
+
 	// request token
 	reqs := &snap.Request{
 		TransactionDetails: midtrans.TransactionDetails{
 			OrderID:  trxmodel.MidtransID,
-			GrossAmt: int64((trx.Trips.Price * trxmodel.Quantity) * (100 / 11)),
+			GrossAmt: int64((trx.Trips.Price * trxmodel.Quantity)),
 		},
 		CreditCard: &snap.CreditCardDetails{
 			Secure: true,

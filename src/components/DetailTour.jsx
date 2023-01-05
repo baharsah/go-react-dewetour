@@ -10,14 +10,39 @@ import ImgTime from '../assets/mi/time.svg'
 import ImgPlane from '../assets/mi/plane.svg'
 import { Form } from 'react-bootstrap'
 import DataDetail from '../dummy/data'
-import { useState , useEffect } from 'react'
+import { useState , useEffect , useContext} from 'react'
 import { useParams ,useNavigate} from 'react-router'
 import anime from "animejs/lib/anime.es.js"
 import {API} from "../config/api"
+import {UserContext} from './context/userProvider';
+
+
+
 
 
 
 function DetailTour() {
+
+  var [state , dispatch] = useContext(UserContext)
+
+useEffect(() => {
+  //change this to the script source you want to load, for example this is snap.js sandbox env
+  const midtransScriptUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
+  //change this according to your client-key
+  const myMidtransClientKey = "Client key here ...";
+
+  let scriptTag = document.createElement("script");
+  scriptTag.src = midtransScriptUrl;
+  // optional if you want to set script attribute
+  // for example snap.js have data-client-key attribute
+  scriptTag.setAttribute("data-client-key", myMidtransClientKey);
+
+  document.body.appendChild(scriptTag);
+  return () => {
+    document.body.removeChild(scriptTag);
+  };
+}, []);
+
   const {id} = useParams()
 
 
@@ -72,7 +97,33 @@ document.body.scrollTop = 0;
  const [show, setShow] = useState(false);
 
  const handleClose = () => setShow(false);
- const handleShow = () => setShow(true);
+ const handleShow = async() => {
+  const response = await API.post("/transaction" ,{counterQty : counter , userId : state.user.id , tripId : parseInt(id) });
+
+  const token = response?.data.data.token;
+  console.log("ini token snap" , token)
+  
+  window.snap.pay(token, {
+    onSuccess: function (result) {
+      /* You may add your own implementation here */
+      console.log(result);
+      history.push("/profile");
+    },
+    onPending: function (result) {
+      /* You may add your own implementation here */
+      console.log(result);
+      history.push("/profile");
+    },
+    onError: function (result) {
+      /* You may add your own implementation here */
+      console.log(result);
+    },
+    onClose: function () {
+      /* You may add your own implementation here */
+      alert("you closed the popup without finishing the payment");
+    },
+  });
+ };
 
  function book(){
 
