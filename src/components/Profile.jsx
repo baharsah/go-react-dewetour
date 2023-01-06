@@ -22,7 +22,7 @@ function Profile() {
           let {data : profile } = useQuery("profileCache" , async () => { 
 
 
-             const response =  await API.get("/trips")
+             const response =  await API.get(`/users/${user.user.id}`)
 
 
              if(user?.isLoading && !user?.isLogin) {navigate('/') } 
@@ -38,7 +38,7 @@ function Profile() {
           // TODO : is user come from
       
           
-              console.log("ini user" , user)
+              console.log("ini user context" , user)
               const navigate = useNavigate()
       
           
@@ -71,22 +71,17 @@ function Profile() {
                 </Row>
                 <Row className="mt-3">
                     <Col>
-                    <h4>Nama : </h4>
+                    <h4>Nama : {profile?.name}</h4>
                     </Col>
                 </Row>
                 <Row className="mt-3">
                     <Col>
-                    <h4>Surel : l2phika.flower@baharsah.my.id</h4>
+                    <h4>Surel : {profile?.email}</h4>
                     </Col>
                 </Row>
                 <Row className="mt-3">
                     <Col>
-                    <h4>Tel : +62 888-9090901</h4>
-                    </Col>
-                </Row>
-                <Row className="mt-3">
-                    <Col>
-                    <h4>Place : Logged in from Another World</h4>
+                    <h4>Place : {profile?.address}</h4>
                     </Col>
                 </Row>
             </Container>
@@ -97,8 +92,9 @@ function Profile() {
         </Col>
     </Row>
     </Container>
-
-    <PaymentPending position={'profile'}></PaymentPending>
+    { profile?.Transactions.map((a ,b) => <PaymentPending key={b} position={'profile'} datatrx={a}></PaymentPending>)
+    
+}
     
     </>
   )

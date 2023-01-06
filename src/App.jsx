@@ -36,6 +36,8 @@ useEffect(() => {
   
   if (localStorage.getItem('token')) {
     setAuthToken(localStorage.getItem("token"));
+  }else{
+    setIsloading(false)
   }
 
   // Redirect Auth
@@ -57,13 +59,27 @@ const checkUser = async () => {
     const response = await API.get('/check-auth');
 
     // If the token incorrect
-    if (response.status === 404 && response.status === 401) {
+    console.log("Status" , response)
+
+
+
+    if(response?.data.data.code == 401){
+      console.log("respon unautoriuzed")
+      setIsloading(false)
+      return dispatch({
+        type: 'AUTH_ERROR',
+      });
+
+    }
+    if (response?.data.data.code == 404) {
       setIsloading(false)
       return dispatch({
         type: 'AUTH_ERROR',
       });
       
     }
+
+   
 
     // Get user data
     let payload = response.data.data;
