@@ -4,6 +4,8 @@ import Img from '../assets/bs/profile.png'
 import PaymentPending from './PaymentPending'
 import {UserContext} from './context/userProvider'
 import {useNavigate} from 'react-router-dom' 
+import { API } from '../config/api'
+import {useQuery} from 'react-query'
 
 
 
@@ -29,6 +31,19 @@ function Profile() {
       
 
           } , [])
+
+          // ambil data profile
+
+          let {data : profile } = useQuery("profileCache" , async () => { 
+
+
+             const response =  await API.get("/trips")
+            return response.data.data   
+           })
+
+          
+
+          // lempar data profile disini 
     
 
     
@@ -50,7 +65,7 @@ function Profile() {
                 </Row>
                 <Row className="mt-3">
                     <Col>
-                    <h4>Nama : Arisu Lutfikahana Baharsah</h4>
+                    <h4>Nama : </h4>
                     </Col>
                 </Row>
                 <Row className="mt-3">

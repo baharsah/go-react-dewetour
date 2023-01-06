@@ -15,7 +15,6 @@ import Draggable from "react-draggable";
 
 function GroupTour() {
 
-  // perintah edit disini
 
 
 
@@ -30,7 +29,7 @@ function GroupTour() {
     setCtryUpdateStatus(null)
     setCtryEditCount(0)
   } 
-  // perintah edit disini
+
 
   var updateDataCountry = async (id , country) => {
     try{
@@ -91,7 +90,6 @@ function GroupTour() {
   var onSetData = (event) => { 
 
     
-    console.log("cacad")
 
     if (event.target.name === 'images') {
       setDataTrip({...dataTrip, [event.target.name]: event.target.files});
