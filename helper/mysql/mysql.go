@@ -14,7 +14,7 @@ var DB *gorm.DB
 func DBInit() {
 	errw := godotenv.Load(".env")
 	if errw != nil {
-		log.Fatal("Mysql : Error loading .env file")
+
 	}
 
 	var err error

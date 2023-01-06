@@ -46,7 +46,7 @@ func randomRune() rune {
 func UploadFilesTrip(next http.HandlerFunc) http.HandlerFunc {
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatal("Error loading .env file")
+
 	}
 	var (
 		API_ENDPOINT      = os.Getenv("API_ENDPOINT")

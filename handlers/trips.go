@@ -41,7 +41,7 @@ func (h *tripRepoHandler) GetTrips(res http.ResponseWriter, req *http.Request) {
 func (h *tripRepoHandler) SetTrip(res http.ResponseWriter, req *http.Request) {
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatal("Error loading .env file")
+
 	}
 	res.Header().Set("Content-Type", "application/json")
 
