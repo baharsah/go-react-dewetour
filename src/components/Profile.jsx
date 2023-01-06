@@ -13,24 +13,9 @@ import {useQuery} from 'react-query'
 
 
 function Profile() {
-    const [user , dispatch] = useContext(UserContext)
-
-    // TODO : is user come from
-
-    
-        console.log("ini user" , user)
-        const navigate = useNavigate()
-
-    
-      
-          useEffect(() => {
 
 
-            if(!user.isLogin) {navigate('/') } 
-
-      
-
-          } , [])
+         
 
           // ambil data profile
 
@@ -38,12 +23,33 @@ function Profile() {
 
 
              const response =  await API.get("/trips")
+
+
+             if(user?.isLoading && !user?.isLogin) {navigate('/') } 
+
             return response.data.data   
            })
 
           
 
           // lempar data profile disini 
+          const [user , dispatch] = useContext(UserContext)
+
+          // TODO : is user come from
+      
+          
+              console.log("ini user" , user)
+              const navigate = useNavigate()
+      
+          
+            
+                useEffect(() => {
+      
+      
+      
+            
+      
+                } ,[])
     
 
     

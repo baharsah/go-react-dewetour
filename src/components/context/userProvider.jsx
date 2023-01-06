@@ -3,6 +3,7 @@ import { createContext, useReducer } from 'react';
 export const UserContext = createContext();
 
 const initialState = {
+  isLoading : true,
   isLogin: false,
   user: {}
 };
@@ -16,6 +17,7 @@ const reducer = (state, action) => {
     case 'LOGIN_SUCCESS':
       localStorage.setItem("token" , payload.token)
       return {
+        isLoading: false,
         isLogin: true,
         user: payload,
       };
