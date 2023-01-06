@@ -1,9 +1,37 @@
-import React from 'react'
+import React , {useContext , useEffect} from 'react'
 import { Container , Row , Col , Button} from 'react-bootstrap'
 import Img from '../assets/bs/profile.png'
 import PaymentPending from './PaymentPending'
+import {UserContext} from './context/userProvider'
+import {useNavigate} from 'react-router-dom' 
+
+
+
+
+
 
 function Profile() {
+    const [user , dispatch] = useContext(UserContext)
+
+    // TODO : is user come from
+
+    
+        console.log("ini user" , user)
+        const navigate = useNavigate()
+
+    
+      
+          useEffect(() => {
+
+
+            if(!user.isLogin) {navigate('/') } 
+
+      
+
+          } , [])
+    
+
+    
   return (
     <>
         <Container className='mt-5 pt-5 ms-5 ps-5'>

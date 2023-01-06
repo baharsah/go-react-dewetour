@@ -41,7 +41,7 @@ useEffect(() => {
     if (state.user.status === 1) {
 
     } else if (state.user.status === 0) {
-      // navigate('/');
+    
     }
   }
 }, [state]);
@@ -52,10 +52,11 @@ const checkUser = async () => {
     const response = await API.get('/check-auth');
 
     // If the token incorrect
-    if (response.status === 404) {
+    if (response.status === 404 && response.status === 401) {
       return dispatch({
         type: 'AUTH_ERROR',
       });
+      
     }
 
     // Get user data
@@ -90,7 +91,6 @@ useEffect(() => {
     <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/detail/:id" element={<DetailTour />}></Route>
-        <Route path="/tour/pending" element={<PaymentPending />}></Route>
         <Route path="/profile" element={<Profile />}></Route>
         <Route path="/trx" element={<IncTrx />}></Route>
         

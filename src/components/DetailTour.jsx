@@ -15,6 +15,7 @@ import { useParams ,useNavigate} from 'react-router'
 import anime from "animejs/lib/anime.es.js"
 import {API} from "../config/api"
 import {UserContext} from './context/userProvider';
+import moment from 'moment/moment'
 
 
 
@@ -29,7 +30,7 @@ useEffect(() => {
   //change this to the script source you want to load, for example this is snap.js sandbox env
   const midtransScriptUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
   //change this according to your client-key
-  const myMidtransClientKey = "Client key here ...";
+  const myMidtransClientKey = import.meta.env.VITE_MDTRNS_CLIENT_KEY;
 
   let scriptTag = document.createElement("script");
   scriptTag.src = midtransScriptUrl;
@@ -101,7 +102,6 @@ document.body.scrollTop = 0;
   const response = await API.post("/transaction" ,{counterQty : counter , userId : state.user.id , tripId : parseInt(id) });
 
   const token = response?.data.data.token;
-  console.log("ini token snap" , token)
   
   window.snap.pay(token, {
     onSuccess: function (result) {
@@ -189,7 +189,7 @@ document.body.scrollTop = 0;
           </Col>
           <Col>
           <h5 className='text-muted'>Date Trip</h5> 
-          <p> <img src={ImgCalendar} alt="" /> {trip?.FromDate}</p>        
+          <p> <img src={ImgCalendar} alt="" /> {moment(trip?.FromDate).format('DD MMMM YYYY HH:mm [WIB]') }</p>        
           </Col>
         </Row>
         <Row>
