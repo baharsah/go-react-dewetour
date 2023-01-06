@@ -4,7 +4,7 @@ import axios, { Axios } from "axios"
 export const API  = axios.create({
 
 
-    baseURL : "https://apidwtour.tamaya.my.id/api/v1",
+    baseURL : "https://go-react-dewetour-production.up.railway.app/api/v1",
 
 })
 
