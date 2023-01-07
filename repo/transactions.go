@@ -13,7 +13,7 @@ type TransactionRepo interface {
 	GetTransaction(id int) (models.Transactions, error)
 	// UpdateTransaction() (models.Transactions, error)
 	SetTransaction(models.Transactions) (models.Transactions, error)
-	UpdateTransactionMidtrans(models.Transactions) (tx, error)
+	UpdateTransactionMidtrans(models.Transactions) (models.Transactions, error)
 }
 
 func RepoTRX(db *gorm.DB) *repo {
