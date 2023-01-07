@@ -13,7 +13,7 @@ type TransactionRepo interface {
 	GetTransaction(id int) (models.Transactions, error)
 	// UpdateTransaction() (models.Transactions, error)
 	SetTransaction(models.Transactions) (models.Transactions, error)
-	UpdateTransactionMidtrans(models.Transactions) error
+	UpdateTransactionMidtrans(models.Transactions) (tx, error)
 }
 
 func RepoTRX(db *gorm.DB) *repo {
@@ -66,9 +66,13 @@ func (r *repo) SetTransaction(trx models.Transactions) (models.Transactions, err
 
 // TODO : buat update dan get by midtrans ID
 
-func (r *repo) UpdateTransactionMidtrans(trx models.Transactions) error {
+func (r *repo) UpdateTransactionMidtrans(trx models.Transactions) (models.Transactions, error) {
 	err := r.db.Debug().Where(models.Transactions{MidtransID: trx.MidtransID}).Updates(models.Transactions{PaymentStatus: trx.PaymentStatus}).Error
-	return err
+	var tx = models.Transactions{}
+
+	_ = r.db.Debug().Preload("User", "name , email").Where(models.Transactions{MidtransID: trx.MidtransID}).First(&tx).Error
+
+	return tx, err
 }
 
 func (r *repo) GetTransactionMidtrans(trx models.Transactions) (models.Transactions, error) {
