@@ -1,10 +1,13 @@
 import React , {useState} from 'react'
 import { Container , Row , Col , Button , Modal} from 'react-bootstrap'
 import LogoDark from '../assets/Icon.svg'
-import QRCode from "react-qr-code";
 import { useNavigate } from 'react-router';
+import moment from 'moment/moment'
+
 
 function PaymentPending(props) {
+
+  console.log("ini data transaksi" ,props.datatrx)
 
     const [show, setShow] = useState(false);
 
@@ -35,7 +38,7 @@ function PaymentPending(props) {
             </Col>
             <Col>
             <h1>Booking</h1>
-            <h4 className='text-muted fw-light'><b>Sunday</b> 30 Oct 2022</h4>
+            <h4 className='text-muted fw-light'>{moment(props.datatrx.created_at).format('DD MMMM YYYY HH:mm [WIB]')}</h4>
             {/* </Col>
             <Col> */}
             
@@ -49,30 +52,30 @@ function PaymentPending(props) {
 
         <Row>
             <Col>
-            <h1>Judul</h1>
-            <h3 className='text-muted'>Location</h3>
+            <h1>{props.datatrx.Trips.Title}</h1>
+            <h3 className='text-muted'>{props.datatrx.Trips.destinationName}</h3>
             </Col>
             <Col>
             <h4>Date Trip</h4>
-            <h5 className='text-muted'>Tanggal</h5>
+            <h5 className='text-muted'>{moment(props.datatrx.Trips.FromDate).format('DD MMMM YYYY HH:mm [WIB]')}</h5>
             </Col>
             <Col>
-            <h4>Date Trip</h4>
-            <h5 className='text-muted'>Tanggal</h5>
+            <h4> Finish At</h4>
+            <h5 className='text-muted'>{moment(props.datatrx.Trips.ToDate).format('DD MMMM YYYY HH:mm [WIB]')}</h5>
             </Col>
 
         </Row>
         <Row>
             <Col>
-            { props?.position == 'profile' && <Button variant='outline-warning' className='m-2'>Waiting Approval</Button> }
+            { props?.position == 'profile' && <Button variant='outline-warning' className='m-2'>{props.datatrx.PaymentStatus}</Button> }
             </Col>
             <Col>
-            <h4>Date Trip</h4>
-            <h5 className='text-muted'>Tanggal</h5>
+            <h4>Accomodation & Eat</h4>
+            <h5 className='text-muted'>{props.datatrx.Trips.Accomodation} & {props.datatrx.Trips.Eatenary}</h5>
             </Col>
             <Col>
-            <h4>Date Trip</h4>
-            <h5 className='text-muted'>Tanggal</h5>
+            <h4>Transportation</h4>
+            <h5 className='text-muted'>{props.datatrx.Trips.Transportation}</h5>
             </Col>
 
         </Row>
@@ -80,50 +83,16 @@ function PaymentPending(props) {
             </Container>
             </Col>
             <Col sm={4} className="p-5">
-            <QRCode value="Mamang Garox"></QRCode>
             </Col>
         </Row>
         <Row>
             <Container>
                 <Row className='border-bottom'>
                 <Col>
-                <h3>No</h3>
-                </Col>
-                <Col>
-                <h3>Fullname</h3>
-                </Col>
-                <Col>
-                <h3>Gender</h3>
-                </Col>
-                <Col>
-                <h3>Phone</h3>
-                </Col>
-                <Col>
-                <h3>&nbsp;</h3>
-                </Col>
-                <Col>
-                <h3>&nbsp;</h3>
-                </Col>
-                
-                </Row>
-                <Row className='border-bottom'>
-                <Col>
-                <h5>1</h5>
-                </Col>
-                <Col>
-                <h5>Asep Knalpot</h5>
-                </Col>
-                <Col>
-                <h5>Cerobong Asap (tbh)</h5>
-                </Col>
-                <Col>
-                <h5>(Kosong delapan)</h5>
-                </Col>
-                <Col>
                 <h5>Qty : </h5>
                 </Col>
                 <Col>
-                <h5>1</h5>
+                <h5>{props.datatrx.Quantity}</h5>
                 </Col>
                 
                 </Row>
@@ -139,7 +108,7 @@ function PaymentPending(props) {
                 </Col>
 
                 <Col>
-                <h5>1</h5>
+                <h5>{props.datatrx.Quantity * props.datatrx.Trips.Price}</h5>
                 </Col>
 
                 

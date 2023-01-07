@@ -1,4 +1,4 @@
-import React , {useContext , useEffect} from 'react'
+import React , {useState , useContext , useEffect} from 'react'
 import CustomNavbar from './components/navbar'
 import Footer from './components/Footer';
 import Home from './components/Home'
@@ -21,6 +21,10 @@ import { useNavigate } from 'react-router-dom';
 
 function App() {
 
+  var [loading, setIsloading] = useState(true)
+
+
+
 var   navigate = useNavigate()
 
 const [ state, dispatch ] = useContext(UserContext);
@@ -32,6 +36,9 @@ useEffect(() => {
   
   if (localStorage.getItem('token')) {
     setAuthToken(localStorage.getItem("token"));
+    setIsloading(false)
+  }else{
+    setIsloading(false)
   }
 
   // Redirect Auth
@@ -47,17 +54,33 @@ useEffect(() => {
 }, [state]);
 
 
+
 const checkUser = async () => {
   try {
     const response = await API.get('/check-auth');
 
     // If the token incorrect
-    if (response.status === 404 && response.status === 401) {
+    console.log("Status" , response)
+
+
+
+    if(response?.data.data.code == 401){
+      console.log("respon unautoriuzed")
+      setIsloading(false)
+      return dispatch({
+        type: 'AUTH_ERROR',
+      });
+
+    }
+    if (response?.data.data.code == 404) {
+      setIsloading(false)
       return dispatch({
         type: 'AUTH_ERROR',
       });
       
     }
+
+   
 
     // Get user data
     let payload = response.data.data;
@@ -70,6 +93,7 @@ const checkUser = async () => {
       type: 'USER_SUCCESS',
       payload,
     });
+    setIsloading(false)
   } catch (error) {
     console.log(error);
   }
@@ -83,8 +107,9 @@ useEffect(() => {
 
 
   return (
- 
-    <>
+
+     loading ?   <img style={ {margin : 300} }  className="scale-up-center"src="https://3.bp.blogspot.com/-WqX6Ng-AgmE/XWcsn3C5HaI/AAAAAAAADeE/qY_OeWR2zf0N0o7TVOI0Sx8v60ohQP1NgCLcBGAs/s1600/1567036546540.jpg" alt="" srcset="" />
+     : <>
 
 
     <CustomNavbar></CustomNavbar>
@@ -103,6 +128,7 @@ useEffect(() => {
 
 
     </>
+    
 
   )
 }

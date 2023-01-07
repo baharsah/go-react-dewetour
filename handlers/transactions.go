@@ -15,6 +15,7 @@ import (
 	"github.com/gorilla/mux"
 	midtrans "github.com/midtrans/midtrans-go"
 	"github.com/midtrans/midtrans-go/snap"
+	"gopkg.in/gomail.v2"
 
 	"net/http"
 )
@@ -169,34 +170,63 @@ func (h *transactionRepoHandler) Notification(res http.ResponseWriter, req *http
 	// 5. failure
 	// 6. refunded
 
+	var mail models.Transactions
+
 	if transactionStatus == "capture" {
 		if fraudStatus == "challenge" {
 			// TODO set transaction status on your database to 'challenge'
-			h.TRXRepo.UpdateTransactionMidtrans(models.Transactions{MidtransID: orderId, PaymentStatus: 1})
+			mail, _ = h.TRXRepo.UpdateTransactionMidtrans(models.Transactions{MidtransID: orderId, PaymentStatus: 1})
 
 		} else if fraudStatus == "accept" {
 			// TODO set transaction status on your database to 'success'
-			h.TRXRepo.UpdateTransactionMidtrans(models.Transactions{MidtransID: orderId, PaymentStatus: 2})
+			mail, _ = h.TRXRepo.UpdateTransactionMidtrans(models.Transactions{MidtransID: orderId, PaymentStatus: 2})
 
 		}
 	} else if transactionStatus == "settlement" {
 		// TODO set transaction status on your databaase to 'success'
-		h.TRXRepo.UpdateTransactionMidtrans(models.Transactions{MidtransID: orderId, PaymentStatus: 2})
+		mail, _ = h.TRXRepo.UpdateTransactionMidtrans(models.Transactions{MidtransID: orderId, PaymentStatus: 2})
 
 	} else if transactionStatus == "deny" {
 		// TODO you can ignore 'deny', because most of the time it allows payment retries
 		// and later can become success
-		h.TRXRepo.UpdateTransactionMidtrans(models.Transactions{MidtransID: orderId, PaymentStatus: 5})
+		mail, _ = h.TRXRepo.UpdateTransactionMidtrans(models.Transactions{MidtransID: orderId, PaymentStatus: 5})
 
 	} else if transactionStatus == "cancel" || transactionStatus == "expire" {
 		// TODO set transaction status on your databaase to 'failure'
-		h.TRXRepo.UpdateTransactionMidtrans(models.Transactions{MidtransID: orderId, PaymentStatus: 5})
+		mail, _ = h.TRXRepo.UpdateTransactionMidtrans(models.Transactions{MidtransID: orderId, PaymentStatus: 5})
 
 	} else if transactionStatus == "pending" {
 		// TODO set transaction status on your databaase to 'pending' / waiting payment
-		h.TRXRepo.UpdateTransactionMidtrans(models.Transactions{MidtransID: orderId, PaymentStatus: 4})
+		mail, _ = h.TRXRepo.UpdateTransactionMidtrans(models.Transactions{MidtransID: orderId, PaymentStatus: 4})
 
 	}
+
+	const CONFIG_SMTP_HOST = "smtp.gmail.com"
+	const CONFIG_SMTP_PORT = 587
+	const CONFIG_SENDER_NAME = "TESTMAIL <snoffi.12@gmail.com>"
+	var CONFIG_AUTH_EMAIL = os.Getenv("MAIL_USER")
+	var CONFIG_AUTH_PASSWORD = os.Getenv("MAIL_KEY")
+
+	mailer := gomail.NewMessage()
+	mailer.SetHeader("From", CONFIG_SENDER_NAME)
+	mailer.SetHeader("To", mail.User.Name, mail.User.Email)
+	mailer.SetHeader("Subject", "Test mail")
+	mailer.SetBody("text/html", "Hello, <b>have a nice day</b>")
+	mailer.Attach("./sample.png")
+
+	dialer := gomail.NewDialer(
+		CONFIG_SMTP_HOST,
+		CONFIG_SMTP_PORT,
+		CONFIG_AUTH_EMAIL,
+		CONFIG_AUTH_PASSWORD,
+	)
+
+	err2 := dialer.DialAndSend(mailer)
+	if err2 != nil {
+		log.Fatal(err.Error())
+	}
+
+	log.Println("Mail sent!")
 
 	// sendmail by getting transactionID
 
