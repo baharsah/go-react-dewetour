@@ -36,6 +36,7 @@ useEffect(() => {
   
   if (localStorage.getItem('token')) {
     setAuthToken(localStorage.getItem("token"));
+    setIsloading(false)
   }else{
     setIsloading(false)
   }
