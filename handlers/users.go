@@ -186,7 +186,14 @@ func (h *userRepoHandler) GetUser(res http.ResponseWriter, req *http.Request) {
 		json.NewEncoder(res).Encode(response)
 		return
 	}
-	response := resultDito.SuccessResult{Code: http.StatusOK, Data: user}
+	authCheck := authDito.CheckAuthResponse{
+		Id:     user.ID,
+		Name:   user.Name,
+		Email:  user.Email,
+		Status: user.IsAdmin,
+	}
+
+	response := resultDito.SuccessResult{Code: http.StatusOK, Data: authCheck}
 	json.NewEncoder(res).Encode(response)
 }
 
