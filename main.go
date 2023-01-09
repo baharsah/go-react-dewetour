@@ -34,6 +34,6 @@ func main() {
 	router.Router(r.PathPrefix("/api/v1").Subrouter())
 	log.Println("Server Running!")
 
-	srverr := http.ListenAndServe("localhost:"+os.Getenv("PORT"), handlers.CORS(AllowedHeaders, AllowedMethods, AllowedOrigins)(r))
+	srverr := http.ListenAndServe(":"+os.Getenv("PORT"), handlers.CORS(AllowedHeaders, AllowedMethods, AllowedOrigins)(r))
 	log.Println(srverr)
 }
